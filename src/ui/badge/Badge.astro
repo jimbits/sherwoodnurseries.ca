@@ -1,0 +1,55 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils/cn";
+
+export const badgeVariants = cva(
+  "inline-flex w-fit shrink-0 items-center justify-center gap-1 rounded-md border font-medium whitespace-nowrap transition-colors [&>svg]:pointer-events-none [&>svg]:size-3",
+  {
+    variants: {
+      variant: {
+        default:
+          "border-transparent bg-green-100 text-green-700 dark:bg-green-400/10 dark:text-green-400",
+        secondary:
+          "border-transparent bg-slate-100 text-slate-700 dark:bg-slate-400/10 dark:text-slate-300",
+        outline:
+          "border-slate-300 bg-transparent text-slate-700 dark:border-slate-600 dark:text-slate-300",
+        info: "border-transparent bg-blue-100 text-blue-700 dark:bg-blue-400/10 dark:text-blue-400",
+        warning:
+          "border-transparent bg-amber-100 text-amber-800 dark:bg-amber-400/10 dark:text-amber-400",
+        destructive:
+          "border-transparent bg-red-100 text-red-700 dark:bg-red-400/10 dark:text-red-400",
+        solid: "border-transparent bg-green-700 text-white dark:bg-green-500",
+      },
+      size: {
+        sm: "px-1.5 py-0.5 text-xs",
+        md: "px-2 py-0.5 text-sm",
+        lg: "px-2.5 py-1 text-sm",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "sm",
+    },
+  },
+);
+
+export interface Props
+  extends HTMLAttributes<"span">,
+    VariantProps<typeof badgeVariants> {
+  /** Text shown in the badge. Slot content takes precedence if provided. */
+  message?: string;
+}
+
+const {
+  message = "ui-badge",
+  variant,
+  size,
+  class: className,
+  ...props
+} = Astro.props;
+---
+
+<span class={cn(badgeVariants({ variant, size }), className)} {...props}>
+  <slot>{message}</slot>
+</span>

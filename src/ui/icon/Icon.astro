@@ -1,0 +1,40 @@
+---
+import type { SVGAttributes } from "astro/types";
+import { cva, type VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils/cn";
+import { getIcon } from "@/icons/registry";
+
+const icon = cva("inline-block shrink-0", {
+  variants: {
+    size: { sm: "size-4", md: "size-5", lg: "size-6", xl: "size-8" },
+  },
+  defaultVariants: { size: "md" },
+});
+
+interface Props extends SVGAttributes, VariantProps<typeof icon> {
+  name: string; // e.g. "star", "social/facebook"
+  label?: string; // set for meaningful icons; omit for decorative
+}
+
+const { name, size, label, class: className, ...rest } = Astro.props;
+const { viewBox, body } = getIcon(name);
+const id = `icon-${name.replaceAll("/", "-")}`;
+
+// Per-page tracking: only the first use of each icon outputs the <symbol>.
+const rendered = (Astro.locals.renderedIcons ??= new Set<string>());
+const isFirst = !rendered.has(name);
+rendered.add(name);
+---
+
+<svg
+  viewBox={viewBox}
+  class={cn(icon({ size }), className)}
+  role={label ? "img" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+  data-icon={name}
+  {...rest}
+>
+  {isFirst && <symbol id={id} viewBox={viewBox} set:html={body} />}
+  <use href={`#${id}`}></use>
+</svg>

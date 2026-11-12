@@ -1,0 +1,31 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import { cn } from "@/lib/utils/cn";
+import Icon from "@/ui/icon/Icon.astro";
+
+interface Props extends HTMLAttributes<"a"> {
+  href: string;
+  class?: string;
+}
+
+const {
+  href,
+
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  class={cn(
+    "inline-flex size-10 items-center justify-center rounded-md hover:bg-accent",
+    className,
+  )}
+  {...rest}
+>
+  <slot />
+</a>

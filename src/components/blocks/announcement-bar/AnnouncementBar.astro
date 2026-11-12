@@ -1,0 +1,15 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+import { cn } from "@/lib/utils/cn";
+
+interface Props extends HTMLAttributes<"div"> {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+---
+
+<div class={cn("text-current bg-olive-600 py-1 px-4", className)} {...rest}>
+  <slot />
+</div>

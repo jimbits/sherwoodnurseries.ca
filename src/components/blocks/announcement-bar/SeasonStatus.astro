@@ -1,0 +1,28 @@
+---
+import { cn } from "@/lib/utils/cn.ts";
+import type { string } from "astro:schema";
+
+export interface Props {
+  message?: string;
+  class?: string;
+  reopen?: string;
+}
+
+const {
+  message = "currently closed for the season we will reopen",
+  class: className,
+  ...reset
+} = Astro.props;
+---
+
+<!-- BADGE -->
+<span class={cn(" text-sm text-white", className)}>
+  <!-- <svg
+    viewBox="0 0 6 6"
+    aria-hidden="true"
+    class="size-1.5 fill-rose-100 dark:fill-rose-400"
+  >
+    <circle r="3" cx="3" cy="3" />
+  </svg> -->
+  {message}
+</span>

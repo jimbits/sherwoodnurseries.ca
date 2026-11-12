@@ -1,0 +1,45 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { socialIcons, type SocialIcon } from "@/icons/social";
+import { cn } from "@/lib/utils/cn";
+
+interface Props extends HTMLAttributes<"a"> {
+  icon: SocialIcon; // only "facebook" | "youtube" | "instagram" | "pinterest"
+  href: string;
+  label: string;
+  withIcon?: boolean;
+}
+
+const {
+  icon,
+  href,
+  label,
+
+  class: className,
+  ...rest
+} = Astro.props;
+const Icon = socialIcons[icon]; // must be capitalized
+---
+
+<a
+  href={href}
+  target="_blank"
+  rel="noopener noreferrer"
+  aria-label={label}
+  class={cn(
+    "inline-flex size-10 items-center justify-center rounded-md hover:bg-accent",
+    className,
+  )}
+  {...rest}
+>
+  {
+    icon ? (
+      <span class="flex gap-1">
+        <Icon class="size-5" fill="currentColor" aria-hidden="true" />
+        <span>{label}</span>
+      </span>
+    ) : (
+      label
+    )
+  }
+</a>

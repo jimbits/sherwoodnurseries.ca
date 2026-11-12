@@ -1,0 +1,15 @@
+---
+import { cn } from "@/lib/utils/cn.ts";
+import type { string } from "astro:schema";
+
+export interface Props {
+  message?: string;
+  class?: string;
+}
+
+const { message, class: className, ...reset } = Astro.props;
+---
+
+<p class={cn(" text-sm text-white", className)}>
+  <slot>Free delivery on all orders</slot>
+</p>

@@ -1,0 +1,80 @@
+---
+interface LinkConfig {
+  href: string;
+  label: string;
+}
+
+export interface Props {
+  /**
+   * Main notification headline or copy.
+   * Defaults to closed season notice with the May 1st spring opening date.
+   */
+  message?: string;
+  /**
+   * Call-to-action link configuration.
+   * Defaults to browsing the spring catalog or joining the waitlist.
+   */
+  link?: LinkConfig;
+  reopen?: string;
+  /**
+   * Badge pill label shown alongside the announcement.
+   * Defaults to "Closed for Season".
+   */
+  badge?: string;
+  /** Unique ID for persistent dismissal tracking in sessionStorage. */
+  id?: string;
+  /** Whether visitors can dismiss the banner. Default is true. */
+  dismissible?: boolean;
+}
+
+const {
+  badge = "Closed for the season we are open again May 1st, 2017",
+  message = "Thanks to all of our loyal customers for the ongoing support of our business.",
+  reopen = " May 1st, 2027",
+  link = {
+    href: "/catalog",
+    label: "Explore Spring 2027 Catalog →",
+  },
+  id = "nursery-closed-announcement-bar",
+  dismissible = true,
+} = Astro.props;
+---
+
+<aside
+  id={id}
+  data-announcement-id={id}
+  role="region"
+  aria-label="Closed Season Announcement"
+  class=""
+>
+  <!-- Anouncement Bar Container -->
+  <div class="flex justify-center sm:justify-between bg-green-950 px-4 py-2.5 sm:text-sm font-medium transition-all duration-300 ease-in-out">
+    <!-- BADGE -->
+    <div class="justify-self-start">
+      <span class="rounded-md bg-emerald-50/40 px-2 py-1 text-xs font-medium text-white dark:bg-emerald-400/10 dark:text-emerald-400">
+        <svg
+          viewBox="0 0 6 6"
+          aria-hidden="true"
+          class="hidden size-1.5 fill-emerald-500 dark:fill-emerald-400"
+        >
+          <circle r="3" cx="3" cy="3" />
+        </svg>
+        {badge}
+      </span>
+    </div>
+    <div class="hidden lg:block">
+      <p class="inline-flex gap-2 leading-relaxed sm:leading-normal text-slate-200 text-xs">
+        <span>{message}</span>{" "}
+      </p>
+    </div>
+
+    <div class="hidden sm:block">
+      <a
+        href={link.href}
+        class="text-xs font-semibold underline underline-offset-4 text-emerald-300/90 hover:text-emerald-200 hover:decoration-emerald-300 transition-colors whitespace-nowrap"
+      >
+        {link.label}
+      </a>
+    </div>
+  </div>
+</aside>

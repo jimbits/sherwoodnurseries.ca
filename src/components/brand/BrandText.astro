@@ -1,0 +1,24 @@
+---
+// src/components/ui/BrandLogo.astro
+// Inline Company Brand Logo
+import type { ComponentProps } from "astro/types";
+import Logo from "@/assets/brand/logo.svg";
+import { cn } from "@/lib/utils/cn";
+
+interface Props {
+  class?: string;
+  label?: string;
+}
+
+const { label = "Sherwood Nurseries", class: className, ...rest } = Astro.props;
+---
+
+<figcaption
+  class={cn("text-[#51524a] text-sm", className)}
+  role={label ? "img" : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : "true"}
+  {...rest}
+>
+  <slot />
+</figcaption>
