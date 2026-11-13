@@ -1,0 +1,33 @@
+---
+// src/pages/styleguide.astro
+import "@/css/global.css";
+import PageMode from "@/components/page-mode/PageMode.astro";
+const plant = {
+  name: "Pilea Plant",
+  description: "Easy-care houseplant with round, coin-shaped leaves.",
+  price: "$48",
+  image: "https://placehold.co/400x300/EDF8F9/477526?text=Pilea",
+};
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Styleguide · Plant App</title>
+  </head>
+
+  <body class="min-h-screen bg-app p-5 text-ink">
+    <header class="mb-6 flex items-center justify-between">
+      <h1 class="text-title">Styleguide</h1>
+      <PageMode />
+    </header>
+
+    <script>
+      const root = document.documentElement;
+      document.getElementById("theme-toggle")?.addEventListener("click", () => {
+        root.dataset.theme = root.dataset.theme === "dark" ? "light" : "dark";
+      });
+    </script>
+  </body>
+</html>

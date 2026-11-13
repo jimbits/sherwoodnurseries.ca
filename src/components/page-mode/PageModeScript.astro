@@ -1,0 +1,24 @@
+---
+// src/components/page-mode/PageModeScript.astro
+// Place inside <head>. Applies the saved (or OS) theme before first paint,
+// so pages don't flash light before switching to dark.
+---
+
+<script is:inline>
+  (function () {
+    function applyTheme() {
+      var theme;
+      try {
+        theme = localStorage.getItem("theme");
+      } catch (e) {}
+      if (theme !== "light" && theme !== "dark") {
+        theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      }
+      document.documentElement.dataset.theme = theme;
+      document.documentElement.style.colorScheme = theme;
+    }
+    applyTheme();
+    // Re-apply after Astro view-transition swaps (harmless without them).
+    document.addEventListener("astro:after-swap", applyTheme);
+  })();
+</script>

@@ -1,0 +1,38 @@
+---
+/**
+ * EmailButton.astro — envelope icon, small label, large address. Opens mailto:.
+ *
+ * <EmailButton email="info@sherwoodnurseries.ca" />
+ * <EmailButton email="info@sherwoodnurseries.ca" subject="Catalog question" />
+ */
+import type { HTMLAttributes } from "astro/types";
+import { cn } from "@/lib/utils/cn";
+
+interface Props extends HTMLAttributes<"button"> {
+  label?: string;
+  email?: string;
+}
+
+const {
+  email = "info@sherwoodnurseries.ca",
+  label = "Email us",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<button
+  type="button"
+  class={cn(
+    "  whitespace-nowrap text-[#2b8a2e] no-underline hover:text-[#0f4b39]",
+    className,
+  )}
+  {...rest}
+>
+  <div class="flex flex-col items-start justify-start gap-0.5">
+    <p class="block text-xs font-bold uppercase tracking-[.3px] text-olive-800">
+      {label}
+    </p>
+    <p class="block text-[13px] leading-snug text-[#4a5a50]">{email}</p>
+  </div>
+</button>

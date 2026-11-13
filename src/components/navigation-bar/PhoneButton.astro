@@ -1,0 +1,57 @@
+---
+/**
+ * PhoneButton.astro — ringing-phone icon, small label, large number. Opens tel:.
+ *
+ * <PhoneButton phone="780-123-4567" />
+ * <PhoneButton phone="780-123-4567" label="Call us" class="text-white" />
+ */
+import type { HTMLAttributes } from "astro/types";
+import { cn } from "@/lib/utils/cn";
+
+interface Props extends Omit<HTMLAttributes<"a">, "href"> {
+  phone?: string;
+  label?: string;
+}
+
+const {
+  phone = "(587)-545-6929",
+  label = "Call Us For Free?",
+  class: className,
+  ...rest
+} = Astro.props;
+const href = `tel:5875456929`;
+---
+
+<a
+  href={href}
+  class={cn(
+    "flex items-center gap-3 whitespace-nowrap rounded-md bg-[#e0face] p-2 text-[#2b8a2e] no-underline hover:text-[#0f4b39] sm:px-4",
+    className,
+  )}
+  {...rest}
+>
+  <svg
+    class="size-8 shrink-0 sm:size-10"
+    width="40"
+    height="40"
+    viewBox="0 0 48 48"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M41 18A18 18 0 0 0 10 11" />
+    <path d="M10 5v6h6" />
+    <path d="M7 30a18 18 0 0 0 31 7" />
+    <path d="M38 43v-6h-6" />
+    <path d="M18 15h4l2 5-2.5 1.5a10 10 0 0 0 5 5L28 24l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 16 17a2 2 0 0 1 2-2z" />
+  </svg>
+  <span class="sr-only sm:not-sr-only">
+    <span class="block text-xs font-bold uppercase tracking-[.1px] text-olive-950">
+      {label}
+    </span>
+    <span class="block font-semibold leading-tight">{phone}</span>
+  </span>
+</a>
