@@ -1,15 +1,44 @@
 ---
-import type { HTMLAttributes } from "astro/types";
-
-import { cn } from "@/lib/utils/cn";
-
-interface Props extends HTMLAttributes<"div"> {
+/**
+ * AnnouncementBar.astro — Sherwood Nurseries announcement strip (variation 2d)
+ * Mobile (<900px): notice only. Desktop: notice · message · address + phone.
+ */
+interface Props {
+  notice?: string;
+  message?: string;
+  address?: string;
+  phone?: string;
   class?: string;
 }
 
-const { class: className, ...rest } = Astro.props;
+const {
+  notice = "Currently Closed Will Reopen Spring 2027",
+  message = "Thank you to all our loyal customers for such a great season this year",
+  address = "22040 Township Rd 522, Sherwood Park, AB",
+  phone = "780-123-4567",
+  class: className,
+} = Astro.props;
+
+const telHref: string = `tel:${phone.replace(/\D/g, "")}`;
 ---
 
-<div class={cn("text-current bg-olive-600 py-1 px-4", className)} {...rest}>
-  <slot />
+<div
+  class:list={[
+    "text-center flex h-[38px] items-center justify-between bg-[#e3efd9] px-6 text-[13px] font-medium text-[#0f4b39]",
+    className,
+  ]}
+  role="region"
+  aria-label="Announcement"
+>
+  <span class="flex-1">{notice}</span>
+  <span class="hidden flex-none font-semibold min-[900px]:inline">
+    {message}
+  </span>
+  <span class="hidden flex-1 items-center justify-end gap-3.5 min-[900px]:flex">
+    <span>{address}</span>
+    <i class="size-1 rounded-full bg-current opacity-80" aria-hidden="true"></i>
+    <a href={telHref} class="hover:text-[#2b8a2e]">
+      {phone}
+    </a>
+  </span>
 </div>

@@ -1,10 +1,8 @@
 ---
-import AnnouncementBar from "@/components/blocks/announcement-bar/AnnouncementBar.astro";
-
+import SiteNavigationBar from "@/components/blocks/navigation-bar/SiteNavigationBar.astro";
 import "../styles/global.css";
-import SeasonStatus from "@/components/blocks/announcement-bar/SeasonStatus.astro";
-import Message from "@/components/blocks/announcement-bar/Message.astro";
-import Badge from "@/ui/badge/Badge.astro";
+import AnnouncementBar from "@/components/blocks/announcement-bar/AnnouncementBar.astro";
+import BrandLogo from "@/components/brand/BrandLogo.astro";
 ---
 
 <!doctype html>
@@ -18,10 +16,9 @@ import Badge from "@/ui/badge/Badge.astro";
     <title>Astro Basics</title>
   </head>
   <body>
-    <AnnouncementBar class="flex justify-center">
-      <Message>Closed For The Season</Message>
-      <Badge />
-    </AnnouncementBar>
+    <AnnouncementBar />
+    <SiteNavigationBar />
+
     <slot />
   </body>
 </html>
@@ -32,5 +29,6 @@ import Badge from "@/ui/badge/Badge.astro";
     margin: 0;
     width: 100%;
     height: 100%;
+    background-color: #eef9fa;
   }
 </style>

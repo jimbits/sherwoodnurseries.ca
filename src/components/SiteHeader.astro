@@ -1,0 +1,221 @@
+---
+/**
+ * SiteHeader.astro — Sherwood Nurseries app bar (variation 2d)
+ * Floating nav under a tinted announcement strip. Mobile (<900px): full-screen overlay.
+ * Styling: Tailwind CSS (v3 or v4). Breakpoint uses `min-[900px]:` to match the design.
+ */
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  links?: NavLink[];
+  currentPath?: string;
+  notice?: string;
+  message?: string;
+  address?: string;
+  phone?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  logoGreen?: string;
+  logoWhite?: string;
+}
+
+const {
+  links = [
+    { label: "Home", href: "/" },
+    { label: "Pages", href: "/pages" },
+    { label: "Services", href: "/services" },
+    { label: "Shop", href: "/shop" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+  ],
+  currentPath = Astro.url.pathname,
+  notice = "Currently Closed Will Reopen Spring 2027",
+  message = "Thank you to all our loyal customers for such a great season this year",
+  address = "22040 Township Rd 522, Sherwood Park, AB",
+  phone = "780-123-4567",
+  ctaLabel = "Explore Spring 2027 Catalog",
+  ctaHref = "/catalog",
+  logoGreen = "/logo-green.svg",
+  logoWhite = "/logo-white.svg",
+} = Astro.props;
+
+const isActive = (href: string) =>
+  href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+---
+
+<header
+  class="bg-white px-[14px] text-[15px] font-medium text-[#1b1b1b]"
+  data-site-header
+>
+  <!-- Announcement strip -->
+  <div class="-mx-[14px] flex h-[38px] items-center justify-between bg-[#e3efd9] px-6 text-[13px] text-[#0f4b39]">
+    <span class="flex-1">{notice}</span>
+    <span class="hidden flex-none font-semibold min-[900px]:inline">
+      {message}
+    </span>
+    <span class="hidden flex-1 items-center justify-end gap-3.5 min-[900px]:flex">
+      <span>{address}</span>
+      <i
+        class="size-1 rounded-full bg-current opacity-80"
+        aria-hidden="true"
+      ></i>
+      <a href={`tel:${phone.replace(/\D/g, "")}`} class="hover:text-[#2b8a2e]">
+        {phone}
+      </a>
+    </span>
+  </div>
+
+  <!-- Main bar -->
+  <div class="flex h-[74px] items-center justify-between border-b border-[#dbe6d8] pl-4 pr-2.5">
+    <a href="/" class="flex items-center gap-2.5 text-[#0f4b39]">
+      <img src={logoGreen} height="40" class="h-10 w-auto" alt="" />
+      <span>
+        <span class="block whitespace-nowrap text-xl font-bold leading-tight">
+          Sherwood Nurseries
+        </span>
+        <span class="block whitespace-nowrap text-[11px] leading-snug tracking-[1px]">
+          Take root and grow strong
+        </span>
+      </span>
+    </a>
+
+    <nav class="hidden min-[900px]:flex" aria-label="Main">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          aria-current={isActive(l.href) ? "page" : undefined}
+          class:list={[
+            "whitespace-nowrap px-3 hover:text-[#2b8a2e]",
+            isActive(l.href) && "text-[#2b8a2e]",
+          ]}
+        >
+          {l.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="hidden items-center gap-2.5 min-[900px]:flex">
+      <form action="/search" role="search">
+        <label class="flex h-10 cursor-text items-center gap-2 rounded-full border border-[#cddac9] bg-[#eef4ec] px-3.5 text-[#0f4b39]">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-4-4" />
+          </svg>
+          <input
+            name="q"
+            placeholder="Search"
+            aria-label="Search"
+            class="w-[84px] border-0 bg-transparent p-0 text-sm text-[#1b1b1b] outline-none placeholder:text-[#5d7a68]"
+          />
+        </label>
+      </form>
+      <a
+        href={ctaHref}
+        class="whitespace-nowrap rounded-full bg-[#2b8a2e] px-[26px] py-3.5 font-semibold text-white hover:bg-[#0f4b39]"
+      >
+        {ctaLabel}
+      </a>
+    </div>
+
+    <button
+      type="button"
+      class="flex size-11 flex-col justify-center gap-[5px] p-[11px] min-[900px]:hidden"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-open
+    >
+      <i class="block h-0.5 bg-current"></i>
+      <i class="block h-0.5 bg-current"></i>
+      <i class="block h-0.5 bg-current"></i>
+    </button>
+  </div>
+
+  <!-- Mobile full-screen overlay -->
+  <div
+    id="mobile-menu"
+    class="pointer-events-none fixed inset-0 z-50 flex flex-col bg-[#0f4b39] p-5 text-white opacity-0 transition-opacity duration-[250ms] data-[open]:pointer-events-auto data-[open]:opacity-100 min-[900px]:hidden"
+    aria-hidden="true"
+    inert
+    data-menu
+  >
+    <div class="flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2.5">
+        <img src={logoWhite} height="36" class="h-9 w-auto" alt="" />
+        <span class="text-xl font-bold">Sherwood</span>
+      </a>
+      <button
+        type="button"
+        class="p-2 text-[22px]"
+        aria-label="Close menu"
+        data-menu-close
+      >
+        ✕
+      </button>
+    </div>
+    <nav class="my-auto flex flex-col gap-1.5" aria-label="Mobile">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          aria-current={isActive(l.href) ? "page" : undefined}
+          class="py-1.5 text-[34px] font-semibold"
+        >
+          {l.label}
+        </a>
+      ))}
+    </nav>
+    <a
+      href={ctaHref}
+      class="rounded-full bg-white px-[22px] py-[13px] text-center font-semibold text-[#0f4b39]"
+    >
+      {ctaLabel}
+    </a>
+  </div>
+</header>
+
+<script>
+  function initHeader() {
+    document
+      .querySelectorAll<HTMLElement>("[data-site-header]")
+      .forEach((header) => {
+        const menu = header.querySelector<HTMLElement>("[data-menu]");
+        const openBtn =
+          header.querySelector<HTMLButtonElement>("[data-menu-open]");
+        const closeBtn =
+          header.querySelector<HTMLButtonElement>("[data-menu-close]");
+        if (!menu || !openBtn || !closeBtn) return;
+
+        const setOpen = (open: boolean) => {
+          menu.toggleAttribute("data-open", open);
+          menu.toggleAttribute("inert", !open);
+          menu.setAttribute("aria-hidden", String(!open));
+          openBtn.setAttribute("aria-expanded", String(open));
+          document.body.style.overflow = open ? "hidden" : "";
+          (open ? closeBtn : openBtn).focus();
+        };
+
+        openBtn.addEventListener("click", () => setOpen(true));
+        closeBtn.addEventListener("click", () => setOpen(false));
+        menu
+          .querySelectorAll("a")
+          .forEach((a) => a.addEventListener("click", () => setOpen(false)));
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && menu.hasAttribute("data-open"))
+            setOpen(false);
+        });
+      });
+  }
+  initHeader();
+  document.addEventListener("astro:after-swap", initHeader);
+</script>

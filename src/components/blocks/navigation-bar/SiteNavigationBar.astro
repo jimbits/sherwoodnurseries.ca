@@ -1,0 +1,202 @@
+---
+import BrandLogo from "@/components/brand/BrandLogo.astro";
+
+/**
+ * NavigationBar.astro — Sherwood Nurseries main bar + responsive nav (variation 2d)
+ * Desktop (>=900px): brand, links, search, CTA. Mobile: hamburger → full-screen overlay.
+ */
+
+interface NavLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  links?: NavLink[];
+  currentPath?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  searchAction?: string;
+  class?: string;
+}
+
+const {
+  links = [
+    { label: "Home", href: "/" },
+    { label: "Pages", href: "/pages" },
+    { label: "Services", href: "/services" },
+    { label: "Shop", href: "/shop" },
+    { label: "Blog", href: "/blog" },
+    { label: "Contact", href: "/contact" },
+  ],
+  currentPath = Astro.url.pathname,
+  ctaLabel = "Explore Spring 2027 Catalog",
+  ctaHref = "/catalog",
+  searchAction = "/search",
+  class: className,
+} = Astro.props;
+
+const isActive = (href: string): boolean =>
+  href === "/" ? currentPath === "/" : currentPath.startsWith(href);
+---
+
+<div
+  class:list={[
+    "bg-white px-[14px] text-[15px] font-medium text-[#1b1b1b]",
+    className,
+  ]}
+  data-nav-bar
+>
+  <!-- Main bar -->
+  <div class="flex h-[74px] items-center justify-between border-b border-[#dbe6d8] pl-4 pr-2.5">
+    <a href="/" class="" aria-label="Sherwood Nurseries home">
+      <figure class="flex items-center gap-2.5 text-[#2b8a2e]">
+        <BrandLogo class="fill-[#2b8a2e] h-12 w-12" />
+        <figcaption>
+          <span class="block whitespace-nowrap text-xl font-bold leading-tight">
+            Sherwood Nurseries
+          </span>
+          <span class="block whitespace-nowrap text-xs leading-snug tracking-[1px] text-center">
+            Take root and grow strong
+          </span>
+        </figcaption>
+      </figure>
+    </a>
+
+    <nav class="hidden min-[900px]:flex" aria-label="Main">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          aria-current={isActive(l.href) ? "page" : undefined}
+          class:list={[
+            "whitespace-nowrap px-3 hover:text-[#2b8a2e]",
+            isActive(l.href) && "text-[#2b8a2e]",
+          ]}
+        >
+          {l.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="hidden items-center gap-2.5 min-[900px]:flex">
+      <form action={searchAction} role="search">
+        <label class="flex h-10 cursor-text items-center gap-2 rounded-full border border-[#cddac9] bg-[#eef4ec] px-3.5 text-[#0f4b39]">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <circle cx="11" cy="11" r="7" />
+            <path d="M20 20l-4-4" />
+          </svg>
+          <input
+            name="q"
+            placeholder="Search"
+            aria-label="Search"
+            class="w-[84px] border-0 bg-transparent p-0 text-sm text-[#1b1b1b] outline-none placeholder:text-[#5d7a68]"
+          />
+        </label>
+      </form>
+      <a
+        href={ctaHref}
+        class="whitespace-nowrap rounded-full bg-[#2b8a2e] px-[26px] py-3.5 font-semibold text-white hover:bg-[#0f4b39]"
+      >
+        {ctaLabel}
+      </a>
+    </div>
+
+    <button
+      type="button"
+      class="flex size-11 flex-col justify-center gap-[5px] p-[11px] min-[900px]:hidden"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-open
+    >
+      <i class="block h-0.5 bg-current"></i>
+      <i class="block h-0.5 bg-current"></i>
+      <i class="block h-0.5 bg-current"></i>
+    </button>
+  </div>
+
+  <!-- Mobile full-screen overlay -->
+  <div
+    id="mobile-menu"
+    class="pointer-events-none fixed inset-0 z-50 flex flex-col bg-[#0f4b39] p-5 text-white opacity-0 transition-opacity duration-[250ms] data-[open]:pointer-events-auto data-[open]:opacity-100 min-[900px]:hidden"
+    aria-hidden="true"
+    inert
+    data-menu
+  >
+    <div class="flex items-center justify-between">
+      <a
+        href="/"
+        class="flex items-center gap-2.5 text-white"
+        aria-label="Sherwood Nurseries home"
+      >
+        <span class="text-xl font-bold">Sherwood</span>
+      </a>
+      <button
+        type="button"
+        class="p-2 text-[22px]"
+        aria-label="Close menu"
+        data-menu-close
+      >
+        ✕
+      </button>
+    </div>
+    <nav class="my-auto flex flex-col gap-1.5" aria-label="Mobile">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          aria-current={isActive(l.href) ? "page" : undefined}
+          class="py-1.5 text-[34px] font-semibold"
+        >
+          {l.label}
+        </a>
+      ))}
+    </nav>
+    <a
+      href={ctaHref}
+      class="rounded-full bg-white px-[22px] py-[13px] text-center font-semibold text-[#0f4b39]"
+    >
+      {ctaLabel}
+    </a>
+  </div>
+</div>
+<script>
+  function initNavigationBar(): void {
+    document.querySelectorAll<HTMLElement>("[data-nav-bar]").forEach((root) => {
+      const menu = root.querySelector<HTMLElement>("[data-menu]");
+      const openBtn = root.querySelector<HTMLButtonElement>("[data-menu-open]");
+      const closeBtn =
+        root.querySelector<HTMLButtonElement>("[data-menu-close]");
+      if (!menu || !openBtn || !closeBtn) return;
+
+      const setOpen = (open: boolean): void => {
+        menu.toggleAttribute("data-open", open);
+        menu.toggleAttribute("inert", !open);
+        menu.setAttribute("aria-hidden", String(!open));
+        openBtn.setAttribute("aria-expanded", String(open));
+        document.body.style.overflow = open ? "hidden" : "";
+        (open ? closeBtn : openBtn).focus();
+      };
+
+      openBtn.addEventListener("click", () => setOpen(true));
+      closeBtn.addEventListener("click", () => setOpen(false));
+      menu
+        .querySelectorAll<HTMLAnchorElement>("a")
+        .forEach((a) => a.addEventListener("click", () => setOpen(false)));
+      document.addEventListener("keydown", (e: KeyboardEvent) => {
+        if (e.key === "Escape" && menu.hasAttribute("data-open"))
+          setOpen(false);
+      });
+    });
+  }
+
+  initNavigationBar();
+  document.addEventListener("astro:after-swap", initNavigationBar);
+</script>

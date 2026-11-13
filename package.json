@@ -21,7 +21,8 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "tailwind-merge": "^3.7.0",
-    "tailwindcss": "^4.3.5"
+    "tailwindcss": "^4.3.5",
+    "wrangler": "^4.161.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
