@@ -1,0 +1,229 @@
+---
+/**
+ * EmailDialog.astro — the "Email Us" button plus a modal contact form.
+ * Native <dialog> with a short CSS fade in/out. The form does not send
+ * anything yet: Send shows "Sending…", then a confirmation that stays up
+ * until the dialog is closed. Reopening shows a fresh form.
+ *
+ * <EmailDialog />
+ * <EmailDialog class="hidden lg:block" />
+ */
+import type { HTMLAttributes } from "astro/types";
+import { cn } from "@/lib/utils/cn";
+import EmailButton from "./EmailButton.astro";
+
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...rest } = Astro.props;
+
+const id = `email-dialog-${Math.random().toString(36).slice(2, 8)}`;
+const titleId = `${id}-title`;
+
+const field =
+  "mt-1 w-full rounded-md border border-border bg-app px-4 py-2.5 text-sm text-ink placeholder:text-muted/70 transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30";
+const labelClass = "block text-sm font-bold text-ink";
+---
+
+<div class={cn("contents", className)} {...rest}>
+  <EmailButton type="button" aria-haspopup="dialog" aria-controls={id} data-email-trigger />
+
+  <dialog
+    id={id}
+    aria-labelledby={titleId}
+    data-email-dialog
+    class="email-dialog m-auto w-[min(32rem,calc(100%-2rem))] max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-lg border border-border bg-surface p-0 text-ink shadow-float"
+  >
+    <div class="flex items-start justify-between gap-4 px-6 pt-6">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-wide text-olive-500">Get in touch</p>
+        <h2 id={titleId} class="mt-1 text-xl font-bold text-ink">Send us a message</h2>
+        <p class="mt-1 text-sm text-muted">We usually reply within one business day.</p>
+      </div>
+      <button
+        type="button"
+        data-email-close
+        aria-label="Close email form"
+        class="grid size-9 shrink-0 place-items-center rounded-pill text-muted transition-colors hover:bg-primary-tint hover:text-on-primary-tint"
+      >
+        <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Form view -->
+    <form data-email-form class="email-view space-y-4 px-6 py-5" novalidate={false}>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class={labelClass}>
+          Name
+          <input name="name" type="text" autocomplete="name" required placeholder="Jane Gardener" value="Jane Gardener" class={field} />
+        </label>
+        <label class={labelClass}>
+          Email
+          <input name="email" type="email" autocomplete="email" required placeholder="jane@example.com" value="jane@example.com" class={field} />
+        </label>
+      </div>
+
+      <label class={labelClass}>
+        Subject
+        <select name="subject" class={field}>
+          <option>General question</option>
+          <option selected>Tree availability</option>
+          <option>Planting &amp; delivery</option>
+          <option>Wholesale / landscaping</option>
+        </select>
+      </label>
+
+      <label class={labelClass}>
+        Message
+        <textarea name="message" rows="5" required placeholder="Tell us what you're looking for…" class={cn(field, "resize-y")}>Hi there, do you have any 6–8 ft Colorado blue spruce in stock this season? I'm looking for three for a backyard windbreak and would also like a quote for delivery and planting in Sherwood Park. Thanks!</textarea>
+      </label>
+
+      <div class="flex justify-end pt-1">
+        <button
+          type="submit"
+          data-email-submit
+          class="inline-flex items-center gap-2 rounded-pill bg-primary px-5 py-2.5 text-sm font-bold text-on-primary transition-colors hover:bg-primary-hover disabled:cursor-wait disabled:opacity-70"
+        >
+          <svg data-email-spinner viewBox="0 0 24 24" class="hidden size-4 animate-spin" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+            <path d="M12 3a9 9 0 1 0 9 9" />
+          </svg>
+          <span data-email-submit-label>Send message</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Confirmation view -->
+    <div data-email-success hidden class="email-view px-6 py-10 text-center">
+      <div class="mx-auto grid size-14 place-items-center rounded-pill bg-primary-tint text-on-primary-tint">
+        <svg viewBox="0 0 24 24" class="size-7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 12.5l4.5 4.5L19 7.5" />
+        </svg>
+      </div>
+      <p class="mt-4 text-lg font-bold text-ink">Message sent</p>
+      <p class="mt-1 text-sm text-muted">Thanks for reaching out — we'll be in touch soon.</p>
+    </div>
+
+    <p data-email-status class="sr-only" aria-live="polite"></p>
+  </dialog>
+</div>
+
+<style>
+  .email-dialog,
+  .email-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 180ms ease-out,
+      display 180ms allow-discrete,
+      overlay 180ms allow-discrete;
+  }
+
+  .email-dialog::backdrop {
+    background-color: rgb(20 28 20 / 0.45);
+  }
+
+  .email-dialog[open],
+  .email-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .email-dialog[open],
+    .email-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* Short fade when swapping between the form and the confirmation. */
+  .email-view:not([hidden]) {
+    animation: email-view-in 180ms ease-out;
+  }
+
+  @keyframes email-view-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .email-dialog,
+    .email-dialog::backdrop {
+      transition: none;
+    }
+    .email-view:not([hidden]) {
+      animation: none;
+    }
+  }
+
+  :global(html:has(dialog[data-email-dialog][open])) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const SENDING_MS = 1200; // fake "sending" time
+
+  function initEmailDialogs() {
+    document.querySelectorAll<HTMLButtonElement>("[data-email-trigger]").forEach((trigger) => {
+      if (trigger.dataset.bound) return;
+      trigger.dataset.bound = "true";
+
+      const dialog = document.getElementById(trigger.getAttribute("aria-controls") ?? "");
+      if (!(dialog instanceof HTMLDialogElement)) return;
+
+      const form = dialog.querySelector<HTMLFormElement>("[data-email-form]")!;
+      const success = dialog.querySelector<HTMLElement>("[data-email-success]")!;
+      const submit = dialog.querySelector<HTMLButtonElement>("[data-email-submit]")!;
+      const submitLabel = dialog.querySelector<HTMLElement>("[data-email-submit-label]")!;
+      const spinner = dialog.querySelector<SVGElement>("[data-email-spinner]")!;
+      const status = dialog.querySelector<HTMLElement>("[data-email-status]")!;
+
+      let timers: number[] = [];
+
+      const showForm = () => {
+        timers.forEach(clearTimeout);
+        timers = [];
+        form.reset();
+        submit.disabled = false;
+        submitLabel.textContent = "Send message";
+        spinner.classList.add("hidden");
+        success.hidden = true;
+        form.hidden = false;
+      };
+
+      trigger.addEventListener("click", () => {
+        showForm();
+        dialog.showModal();
+      });
+
+      dialog.querySelectorAll("[data-email-close]").forEach((btn) =>
+        btn.addEventListener("click", () => dialog.close()),
+      );
+
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+
+      // Only fires once the browser's built-in validation passes.
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        submit.disabled = true;
+        submitLabel.textContent = "Sending…";
+        spinner.classList.remove("hidden");
+        status.textContent = "Sending your message…";
+
+        timers.push(
+          window.setTimeout(() => {
+            form.hidden = true;
+            success.hidden = false;
+            status.textContent = "Message sent. Thanks for reaching out.";
+          }, SENDING_MS),
+        );
+      });
+    });
+  }
+
+  initEmailDialogs();
+  document.addEventListener("astro:page-load", initEmailDialogs);
+</script>

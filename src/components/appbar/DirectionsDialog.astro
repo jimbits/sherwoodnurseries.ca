@@ -1,0 +1,222 @@
+---
+/**
+ * DirectionsDialog.astro — the "Get Directions" button plus the modal it opens.
+ * Uses a native <dialog> (focus trap, Esc to close, ::backdrop) with a short
+ * CSS fade in/out. Content below is placeholder copy.
+ *
+ * <DirectionsDialog />
+ * <DirectionsDialog class="hidden xl:block" />
+ */
+import type { HTMLAttributes } from "astro/types";
+import { cn } from "@/lib/utils/cn";
+import DirectionsButton from "./DirectionsButton.astro";
+
+type Props = HTMLAttributes<"div">;
+
+const { class: className, ...rest } = Astro.props;
+
+// Unique per instance so several dialogs can coexist on a page.
+const id = `directions-dialog-${Math.random().toString(36).slice(2, 8)}`;
+const titleId = `${id}-title`;
+
+// Placeholder details — swap for the real ones.
+const address = "123 Placeholder Road, Sherwood Park, AB T8A 0A0";
+const nurseryLocation =
+  "Sherwood Park Tree Nursery – Range Road 221, Township Road 522";
+const mapsQuery = encodeURIComponent(
+  "Sherwood Park Tree Nursery, Sherwood Park, AB",
+);
+---
+
+<div class={cn("contents", className)} {...rest}>
+  <DirectionsButton
+    type="button"
+    aria-haspopup="dialog"
+    aria-controls={id}
+    data-directions-trigger
+  />
+
+  <dialog
+    id={id}
+    aria-labelledby={titleId}
+    data-directions-dialog
+    class="directions-dialog m-auto w-[min(32rem,calc(100%-2rem))] max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-lg border border-border bg-surface p-0 text-ink shadow-float"
+  >
+    <div class="flex items-start justify-between gap-4 px-6 pt-6">
+      <div>
+        <p class="text-xs font-bold uppercase tracking-wide text-olive-500">
+          Visit the nursery
+        </p>
+        <h2 id={titleId} class="mt-1 text-xl font-bold text-ink">
+          Getting here
+        </h2>
+      </div>
+      <button
+        type="button"
+        data-directions-close
+        aria-label="Close directions"
+        class="grid size-9 shrink-0 place-items-center rounded-pill text-muted transition-colors hover:bg-primary-tint hover:text-on-primary-tint"
+      >
+        <svg
+          viewBox="0 0 24 24"
+          class="size-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="space-y-5 px-6 py-5">
+      <div class="space-y-3">
+        <div>
+          <label for={`${id}-directions`} class="block text-sm font-bold text-ink">From</label>
+          <input
+            id={`${id}-directions`}
+            type="text"
+            name="directions"
+            placeholder="Get directions from"
+            autocomplete="off"
+            class="mt-1 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-muted"
+          />
+        </div>
+        <div>
+          <label for={`${id}-location`} class="block text-sm font-bold text-ink">To</label>
+          <input
+            id={`${id}-location`}
+            type="text"
+            name="location"
+            placeholder={nurseryLocation}
+            autocomplete="off"
+            class="mt-1 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm text-ink placeholder:text-muted"
+          />
+        </div>
+      </div>
+
+      <!-- Map placeholder -->
+      <div class="grid aspect-video place-items-center rounded-md border border-dashed border-border bg-app text-sm text-muted">
+        Map embed goes here
+      </div>
+
+      <dl class="grid gap-4 text-sm sm:grid-cols-2">
+        <div>
+          <dt class="font-bold text-ink">Address</dt>
+          <dd class="mt-1 text-muted">{address}</dd>
+        </div>
+        <div>
+          <dt class="font-bold text-ink">Hours</dt>
+          <dd class="mt-1 text-muted">
+            Mon–Sat 9am–6pm
+            <br />
+            Sun 10am–5pm
+          </dd>
+        </div>
+      </dl>
+
+      <div class="text-sm">
+        <p class="font-bold text-ink">From Edmonton</p>
+        <p class="mt-1 text-muted">
+          Take Highway 16 East toward Sherwood Park, exit at Placeholder Road
+          and head south for 2 km. The nursery entrance is on the left, with
+          free parking at the front.
+        </p>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2 border-t border-border px-6 py-4 sm:flex-row sm:justify-end">
+      <a
+        href={`https://maps.apple.com/?q=${mapsQuery}`}
+        target="_blank"
+        rel="noopener"
+        class="rounded-pill border border-border px-4 py-2 text-center text-sm font-bold text-ink transition-colors hover:bg-primary-tint"
+      >
+        Open In Apple Maps
+      </a>
+      <a
+        href={`https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`}
+        target="_blank"
+        rel="noopener"
+        class="rounded-pill bg-primary px-4 py-2 text-center text-sm font-bold text-on-primary transition-colors hover:bg-primary-hover"
+      >
+        Open in Google Maps
+      </a>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  /* Fade the dialog and its backdrop in and out. `allow-discrete` lets
+     display/overlay flip *after* the fade-out instead of instantly. */
+  .directions-dialog,
+  .directions-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 180ms ease-out,
+      display 180ms allow-discrete,
+      overlay 180ms allow-discrete;
+  }
+
+  .directions-dialog::backdrop {
+    background-color: rgb(20 28 20 / 0.45);
+  }
+
+  .directions-dialog[open],
+  .directions-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .directions-dialog[open],
+    .directions-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .directions-dialog,
+    .directions-dialog::backdrop {
+      transition: none;
+    }
+  }
+
+  /* Stop the page scrolling behind the open modal. */
+  :global(html:has(dialog[data-directions-dialog][open])) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  function initDirectionsDialogs() {
+    document
+      .querySelectorAll<HTMLButtonElement>("[data-directions-trigger]")
+      .forEach((trigger) => {
+        if (trigger.dataset.bound) return;
+        trigger.dataset.bound = "true";
+
+        const dialog = document.getElementById(
+          trigger.getAttribute("aria-controls") ?? "",
+        );
+        if (!(dialog instanceof HTMLDialogElement)) return;
+
+        trigger.addEventListener("click", () => dialog.showModal());
+
+        dialog
+          .querySelectorAll("[data-directions-close]")
+          .forEach((btn) =>
+            btn.addEventListener("click", () => dialog.close()),
+          );
+
+        // Click on the backdrop (the dialog element itself, outside its content) closes it.
+        dialog.addEventListener("click", (event) => {
+          if (event.target === dialog) dialog.close();
+        });
+      });
+  }
+
+  initDirectionsDialogs();
+  document.addEventListener("astro:page-load", initDirectionsDialogs);
+</script>

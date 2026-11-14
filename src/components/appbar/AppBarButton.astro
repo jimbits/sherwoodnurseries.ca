@@ -1,0 +1,56 @@
+---
+/**
+ * EmailButton.astro — envelope icon, small label, large address. Opens mailto:.
+ *
+ * <EmailButton email="info@sherwoodnurseries.ca" />
+ * <EmailButton email="info@sherwoodnurseries.ca" subject="Catalog question" />
+ */
+import type { HTMLAttributes } from "astro/types";
+import { cn } from "@/lib/utils/cn";
+
+interface Props extends HTMLAttributes<"button"> {
+  label?: string;
+  email?: string;
+}
+
+const {
+  email = "info@sherwoodnurseries.ca",
+  label = "Email us",
+  class: className,
+  ...rest
+} = Astro.props;
+---
+
+<button
+  type="button"
+  class={cn(
+    "  whitespace-nowrap text-olive-600 no-underline hover:text-[#0f4b39]",
+    className,
+  )}
+  {...rest}
+>
+  <div class="flex flex-col gap-2">
+    <div class="flex gap-1">
+      <svg
+        stroke="currentColor"
+        fill="currentColor"
+        stroke-width="0"
+        version="1.1"
+        viewBox="0 0 17 17"
+        height="16"
+        width="16"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M0 2v13h17v-13h-17zM8.494 9.817l-6.896-6.817h13.82l-6.924 6.817zM5.755 8.516l-4.755 4.682v-9.383l4.755 4.701zM6.466 9.219l2.026 2.003 1.996-1.966 4.8 4.744h-13.677l4.855-4.781zM11.201 8.555l4.799-4.725v9.467l-4.799-4.742z"></path>
+      </svg>
+      <span class="block text-xs font-bold uppercase tracking-[.1px]">
+        {label}
+      </span>
+    </div>
+    <span>
+      <span class="block text-[14px] leading-2 text-[#4a5a50] font-bold">
+        {email}
+      </span>
+    </span>
+  </div>
+</button>

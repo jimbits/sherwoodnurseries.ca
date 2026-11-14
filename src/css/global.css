@@ -16,19 +16,23 @@
   --color-surface-glass: rgb(
     250 253 253 / 0.62
   ); /* use with backdrop-blur-md */
-  --color-border: oklch(91.88% 0.0124 178.00);
+  --color-border: oklch(91.88% 0.0124 178);
   --color-ink: oklch(27.08% 0.0252 144.84); /* headings + body text */
   --color-muted: oklch(51.33% 0.0233 149.76); /* secondary text */
-  --color-primary: oklch(51.15% 0.1207 134.54); /* leaf green: actions, prices, active */
+  --color-primary: oklch(
+    51.15% 0.1207 134.54
+  ); /* leaf green: actions, prices, active */
   --color-primary-hover: oklch(44.82% 0.1041 134.93);
-  --color-on-primary: oklch(100.00% 0.0000 0.00);
-  --color-primary-soft: oklch(79.66% 0.0919 130.14); /* decorative only, never text */
+  --color-on-primary: oklch(100% 0 0);
+  --color-primary-soft: oklch(
+    79.66% 0.0919 130.14
+  ); /* decorative only, never text */
   --color-primary-tint: oklch(93.85% 0.0371 128.91); /* selected chip bg */
   --color-on-primary-tint: oklch(44.61% 0.0919 134.13);
   --color-accent: oklch(73.46% 0.1336 37.55); /* coral: one moment per screen */
-  --color-accent-soft: oklch(91.02% 0.0420 42.07);
+  --color-accent-soft: oklch(91.02% 0.042 42.07);
   --color-on-accent: oklch(25.45% 0.0623 38.32); /* never white on coral */
-  --color-danger: oklch(50.13% 0.1783 28.70);
+  --color-danger: oklch(50.13% 0.1783 28.7);
 
   /* Typography */
   --font-sans: "Nunito", ui-rounded, system-ui, sans-serif;
@@ -80,7 +84,7 @@
 
 /* Dark theme overrides */
 [data-theme="dark"] {
-  --color-page: oklch(18.51% 0.0088 169.20);
+  --color-page: oklch(18.51% 0.0088 169.2);
   --color-app: oklch(21.81% 0.0119 186.96);
   --color-surface: oklch(25.83% 0.0146 181.56);
   --color-surface-glass: rgb(28 38 36 / 0.62);
@@ -89,11 +93,11 @@
   --color-muted: oklch(74.41% 0.0203 152.69);
   --color-primary: oklch(74.85% 0.1323 132.44);
   --color-primary-hover: oklch(80.39% 0.1176 131.79);
-  --color-on-primary: oklch(22.40% 0.0441 135.33);
+  --color-on-primary: oklch(22.4% 0.0441 135.33);
   --color-primary-soft: oklch(48.82% 0.0913 133.83);
   --color-primary-tint: oklch(30.06% 0.0444 135.27);
   --color-on-primary-tint: oklch(83.63% 0.1027 129.47);
-  --color-accent: oklch(76.90% 0.1133 38.41);
+  --color-accent: oklch(76.9% 0.1133 38.41);
   --color-accent-soft: oklch(32.32% 0.0511 38.12);
   --color-on-accent: oklch(20.88% 0.0483 39.74);
   --color-danger: oklch(83.45% 0.0677 22.01);
