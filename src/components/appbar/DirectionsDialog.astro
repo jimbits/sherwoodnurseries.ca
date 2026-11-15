@@ -2,39 +2,57 @@
 /**
  * DirectionsDialog.astro — the "Get Directions" button plus the modal it opens.
  * Uses a native <dialog> (focus trap, Esc to close, ::backdrop) with a short
- * CSS fade in/out. Content below is placeholder copy.
+ * CSS fade in/out. Address and hours come from src/data; the "From Edmonton"
+ * route and map embed are still placeholders.
+ *
+ * Pass a `trigger` slot to replace the default app-bar button; its contents
+ * are wrapped in a <button> styled with `triggerClass`.
  *
  * <DirectionsDialog />
  * <DirectionsDialog class="hidden xl:block" />
+ * <DirectionsDialog triggerClass="…"><Fragment slot="trigger">Get directions</Fragment></DirectionsDialog>
  */
 import type { HTMLAttributes } from "astro/types";
 import { cn } from "@/lib/utils/cn";
 import DirectionsButton from "./DirectionsButton.astro";
+import { business, fullAddress, mapsLinks } from "@/data/business";
+import { hoursGroups, season, formatDate } from "@/data/hours";
 
-type Props = HTMLAttributes<"div">;
+type Props = HTMLAttributes<"div"> & { triggerClass?: string };
 
-const { class: className, ...rest } = Astro.props;
+const { class: className, triggerClass, ...rest } = Astro.props;
 
 // Unique per instance so several dialogs can coexist on a page.
 const id = `directions-dialog-${Math.random().toString(36).slice(2, 8)}`;
 const titleId = `${id}-title`;
 
-// Placeholder details — swap for the real ones.
-const address = "123 Placeholder Road, Sherwood Park, AB T8A 0A0";
-const nurseryLocation =
-  "Sherwood Park Tree Nursery – Range Road 221, Township Road 522";
-const mapsQuery = encodeURIComponent(
-  "Sherwood Park Tree Nursery, Sherwood Park, AB",
-);
+// Address and hours come from the shared data files so this dialog always
+// matches the hero's Plan your visit card.
+const nurseryLocation = `${business.name} – ${fullAddress}`;
+const hours = hoursGroups();
 ---
 
 <div class={cn("contents", className)} {...rest}>
-  <DirectionsButton
-    type="button"
-    aria-haspopup="dialog"
-    aria-controls={id}
-    data-directions-trigger
-  />
+  {
+    Astro.slots.has("trigger") ? (
+      <button
+        type="button"
+        class={triggerClass}
+        aria-haspopup="dialog"
+        aria-controls={id}
+        data-directions-trigger
+      >
+        <slot name="trigger" />
+      </button>
+    ) : (
+      <DirectionsButton
+        type="button"
+        aria-haspopup="dialog"
+        aria-controls={id}
+        data-directions-trigger
+      />
+    )
+  }
 
   <dialog
     id={id}
@@ -105,20 +123,33 @@ const mapsQuery = encodeURIComponent(
       <dl class="grid gap-4 text-sm sm:grid-cols-2">
         <div>
           <dt class="font-bold text-ink">Address</dt>
-          <dd class="mt-1 text-muted">{address}</dd>
+          <dd class="mt-1 text-muted">
+            <address class="not-italic">
+              {business.name}
+              <br />
+              {business.street}
+              <br />
+              {business.locality}, {business.region}
+            </address>
+          </dd>
         </div>
         <div>
           <dt class="font-bold text-ink">Hours</dt>
           <dd class="mt-1 text-muted">
-            Mon–Sat 9am–6pm
-            <br />
-            Sun 10am–5pm
+            <ul>
+              {hours.map(({ days, time }) => <li>{days}: {time}</li>)}
+            </ul>
+            <p class="mt-2">
+              Closed for the season {formatDate(season.closes)} – reopens{" "}
+              {formatDate(season.reopens)}.
+            </p>
           </dd>
         </div>
       </dl>
 
       <div class="text-sm">
         <p class="font-bold text-ink">From Edmonton</p>
+        <!-- TODO: placeholder route; replace with real driving directions. -->
         <p class="mt-1 text-muted">
           Take Highway 16 East toward Sherwood Park, exit at Placeholder Road
           and head south for 2 km. The nursery entrance is on the left, with
@@ -129,7 +160,7 @@ const mapsQuery = encodeURIComponent(
 
     <div class="flex flex-col gap-2 border-t border-border px-6 py-4 sm:flex-row sm:justify-end">
       <a
-        href={`https://maps.apple.com/?q=${mapsQuery}`}
+        href={mapsLinks.apple}
         target="_blank"
         rel="noopener"
         class="rounded-pill border border-border px-4 py-2 text-center text-sm font-bold text-ink transition-colors hover:bg-primary-tint"
@@ -137,7 +168,7 @@ const mapsQuery = encodeURIComponent(
         Open In Apple Maps
       </a>
       <a
-        href={`https://www.google.com/maps/dir/?api=1&destination=${mapsQuery}`}
+        href={mapsLinks.google}
         target="_blank"
         rel="noopener"
         class="rounded-pill bg-primary px-4 py-2 text-center text-sm font-bold text-on-primary transition-colors hover:bg-primary-hover"

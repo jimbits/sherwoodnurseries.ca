@@ -1,0 +1,115 @@
+---
+/**
+ * HeroIntro.astro — the hero's left-hand text column, shared by every draft.
+ * Pattern from design/reference/example-left-column.png: leaf eyebrow,
+ * large heading, lead, two icon feature rows, solid button.
+ * Colours from design/reference/color-selection.png.
+ *
+ * tone="light" → dark text for mint/cream backgrounds
+ * tone="dark"  → light text over a photo
+ *
+ * <HeroIntro headingId="hero-a-heading" />
+ * <HeroIntro tone="dark" align="center" headingId="…" />
+ */
+import { cn } from "@/lib/utils/cn";
+import HeroIcon from "./HeroIcon.astro";
+
+type Props = {
+  headingId: string;
+  tone?: "light" | "dark";
+  align?: "left" | "center";
+  class?: string;
+};
+
+const { headingId, tone = "light", align = "left", class: className } = Astro.props;
+const dark = tone === "dark";
+
+const features = [
+  { icon: "sprout", text: "Trees, shrubs & perennials hardy to zone 3" },
+  { icon: "truck", text: "Delivery & planting across the Edmonton region" },
+] as const;
+---
+
+<div
+  class={cn(
+    "flex flex-col",
+    align === "center" ? "items-center text-center" : "items-start",
+    dark ? "text-sherwood-paper" : "text-sherwood-forest",
+    className,
+  )}
+>
+  <p
+    class={cn(
+      "inline-flex items-center gap-2 rounded-pill border px-4 py-1.5 text-[13px] font-semibold uppercase tracking-wider",
+      dark
+        ? "border-sherwood-paper/25 bg-sherwood-paper/10 text-sherwood-paper backdrop-blur-sm"
+        : "border-sherwood-lime-line bg-sherwood-lime-tint text-sherwood-forest",
+    )}
+  >
+    <HeroIcon name="leaf" class={cn("size-4", dark ? "text-sherwood-lime-line" : "text-sherwood-leaf")} />
+    Trees, shrubs &amp; perennials · Sherwood Park, Alberta
+  </p>
+
+  <h1
+    id={headingId}
+    class="mt-5 max-w-[16ch] text-[40px] font-bold leading-[1.05] tracking-tight text-balance sm:text-[52px] xl:text-[60px]"
+  >
+    Everything your garden needs to take root.
+  </h1>
+
+  <p
+    class={cn(
+      "mt-5 max-w-[34rem] text-lg leading-relaxed text-pretty",
+      dark ? "text-sherwood-paper/85" : "text-sherwood-forest-soft",
+    )}
+  >
+    Walk the rows, talk to our growers, and leave with plants that suit your
+    soil, sun and space.
+  </p>
+
+  <ul
+    class={cn(
+      "mt-7 grid gap-4 sm:grid-cols-2 sm:gap-8",
+      align === "center" && "text-left",
+    )}
+  >
+    {
+      features.map(({ icon, text }) => (
+        <li class="flex max-w-[15rem] items-center gap-3 text-[15px] leading-snug">
+          <HeroIcon name={icon} class={cn("size-9", dark ? "text-sherwood-lime-line" : "text-sherwood-leaf")} />
+          {text}
+        </li>
+      ))
+    }
+  </ul>
+
+  <div
+    class={cn(
+      "mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap",
+      align === "center" && "sm:justify-center",
+    )}
+  >
+    <a
+      href="/products"
+      class={cn(
+        "inline-flex min-h-[52px] items-center justify-center rounded-sm px-7 text-[17px] font-bold transition-colors",
+        dark
+          ? "bg-sherwood-paper text-sherwood-forest hover:bg-sherwood-mint"
+          : "bg-sherwood-forest text-sherwood-paper hover:bg-sherwood-forest-hover",
+      )}
+    >
+      Shop trees &amp; shrubs
+    </a>
+    <a
+      href="/services/consultation"
+      class={cn(
+        "inline-flex min-h-[52px] items-center justify-center rounded-sm border-2 px-7 text-[17px] font-bold transition-colors",
+        dark
+          ? "border-sherwood-paper/70 text-sherwood-paper hover:bg-sherwood-paper/10"
+          : "border-sherwood-forest text-sherwood-forest hover:bg-sherwood-forest/5",
+      )}
+    >
+      Book a consultation
+    </a>
+  </div>
+</div>

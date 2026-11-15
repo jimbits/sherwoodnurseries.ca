@@ -1,0 +1,32 @@
+---
+/**
+ * HoursList.astro — the nursery's weekly hours as a definition list.
+ * Shared by the hero "Hours of operation" card and HoursDialog so the
+ * hours only live in one place.
+ *
+ * <HoursList />
+ */
+import type { HTMLAttributes } from "astro/types";
+import { cn } from "@/lib/utils/cn";
+import { hoursGroups } from "@/data/hours";
+
+type Props = HTMLAttributes<"dl">;
+
+const { class: className, ...rest } = Astro.props;
+
+const hours = hoursGroups();
+---
+
+<dl
+  class={cn("grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-[15px]", className)}
+  {...rest}
+>
+  {
+    hours.map(({ days, time }) => (
+      <>
+        <dt class="font-semibold">{days}</dt>
+        <dd class="text-neutral-600">{time}</dd>
+      </>
+    ))
+  }
+</dl>

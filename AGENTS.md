@@ -20,3 +20,9 @@ Consult these guides before working on related tasks:
 - [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
 - [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
 - [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+
+## SEO / GEO / AEO
+
+Plan and checklist: [docs/plans/seo-geo-aeo.md](docs/plans/seo-geo-aeo.md).
+Read it before adding pages, metadata, schema or content.
+Tick items off and add notes when work lands.

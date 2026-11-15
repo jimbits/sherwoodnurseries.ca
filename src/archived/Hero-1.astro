@@ -1,7 +1,22 @@
 ---
-// Hero.astro — Sherwood Nurseries full-bleed hero
+// Hero.astro — Sherwood Nursery full-bleed hero
 // Background image: place at /public/images/sherwood-nursery-yard.png
 import BrandLogo from "@/components/brand/BrandLogo.astro";
+import DirectionsDialog from "@/components/appbar/DirectionsDialog.astro";
+import HoursDialog from "@/components/hours/HoursDialog.astro";
+import HoursList from "@/components/hours/HoursList.astro";
+
+// Below lg the hours/find-us cards collapse into these two dialog buttons.
+// Icon sits beside the label (inline axis). Each button grows to fill the row
+// (shared equally side by side); when the row is narrower than two 12rem
+// buttons they wrap and each takes the full width.
+const heroButtonBase =
+  "flex min-h-14 w-full flex-[1_1_12rem] flex-row items-center justify-center gap-3 whitespace-nowrap rounded-[6px] border px-5 py-4 text-base font-semibold text-white transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white";
+// Solid medium green.
+const heroButtonSolid = `${heroButtonBase} border-transparent bg-rose-500`;
+// Light green stroke over a 10% light green fill.
+const heroButtonOutline = `${heroButtonBase} border-lime-200`;
+const heroIcon = "size-6 shrink-0 fill-none stroke-current stroke-[1.5]";
 ---
 
 <section
@@ -16,16 +31,18 @@ import BrandLogo from "@/components/brand/BrandLogo.astro";
     fetchpriority="high"
     decoding="async"
   />
-  <div class="absolute inset-0 -z-10 bg-black/55" aria-hidden="true"></div>
+  <!-- Image Gradient Overlay -->
+  <div class="absolute inset-0 -z-10 bg-linear-180 from-blue-500/15 to-olive-800 to-90%" />
 
   <!-- Main content: centered two columns -->
   <div class="m-auto grid w-full max-w-7xl items-center gap-10 px-6 py-16 sm:px-10 md:py-20 lg:grid-cols-2 lg:gap-16 lg:px-16">
     <!-- Left: heading + CTAs -->
-    <div class="flex flex-col gap-6 text-center text-white sm:text-left">
-      <div class="flex flex-col items-center gap-1 sm:items-start">
+    <div class="flex flex-col gap-6 text-center text-white lg:text-left">
+      <!-- Hidden on phones: the app bar shows the logo, name and tagline there -->
+      <div class="hidden flex-col items-center gap-1 sm:flex lg:items-start">
         <BrandLogo class="mb-3 size-16 text-white sm:size-20" label="" />
         <p class="text-sm font-semibold uppercase tracking-[0.12em] text-neutral-200">
-          Sherwood Nurseries
+          Sherwood Nursery
         </p>
         <p class="text-base font-medium text-[#cfe8c4]">
           Take Root &amp; Grow Strong
@@ -37,11 +54,11 @@ import BrandLogo from "@/components/brand/BrandLogo.astro";
       >
         Everything your garden needs to take root.
       </h1>
-      <p class="mx-auto max-w-xl text-lg sm:mx-0 leading-relaxed text-neutral-200 sm:text-xl">
+      <p class="mx-auto max-w-xl text-lg leading-relaxed lg:mx-0 text-neutral-200 sm:text-xl">
         Walk the rows, talk to our growers, and leave with plants that suit your
         soil, sun and space.
       </p>
-      <div class="flex flex-col gap-4 sm:flex-row sm:flex-wrap">
+      <div class="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start">
         <a
           href="/shop/trees-shrubs"
           class="inline-flex min-h-12 items-center justify-center rounded-md bg-white px-6 font-semibold text-neutral-900 transition hover:bg-neutral-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
@@ -57,8 +74,42 @@ import BrandLogo from "@/components/brand/BrandLogo.astro";
       </div>
     </div>
 
-    <!-- Right: hours + find us -->
-    <div class="mx-auto flex w-full max-w-md flex-col gap-4 sm:max-w-none sm:flex-row lg:max-w-md lg:flex-col">
+    <!-- Small screens: hours + directions as dialog buttons -->
+    <div class="flex w-full flex-wrap gap-4 lg:hidden">
+      <DirectionsDialog triggerClass={heroButtonSolid}>
+        <Fragment slot="trigger">
+          <svg
+            viewBox="0 0 24 24"
+            class={heroIcon}
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M12 21s-7-6.1-7-11.5a7 7 0 0 1 14 0C19 14.9 12 21 12 21z" />
+            <circle cx="12" cy="9.5" r="2.5" />
+          </svg>
+          Get directions
+        </Fragment>
+      </DirectionsDialog>
+      <HoursDialog triggerClass={heroButtonOutline}>
+        <Fragment slot="trigger">
+          <svg
+            viewBox="0 0 24 24"
+            class={heroIcon}
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+          </svg>
+          Hours of operation
+        </Fragment>
+      </HoursDialog>
+    </div>
+
+    <!-- lg+: hours + find us cards -->
+    <div class="mx-auto hidden w-full max-w-md flex-col gap-4 lg:flex">
       <!-- Hours card -->
       <div class="flex flex-1 flex-col gap-3 rounded-xl bg-white p-6">
         <div class="flex flex-wrap items-center justify-between gap-2">
@@ -71,16 +122,7 @@ import BrandLogo from "@/components/brand/BrandLogo.astro";
             Open until 6 PM
           </span>
         </div>
-        <dl class="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 text-[15px]">
-          <dt class="font-semibold">Mon – Fri</dt>
-          <dd class="text-neutral-600">9:00 AM – 6:00 PM</dd>
-          <dt class="font-semibold">Saturday</dt>
-          <dd class="text-neutral-600">9:00 AM – 5:00 PM</dd>
-          <dt class="font-semibold">Sunday</dt>
-          <dd class="text-neutral-600">10:00 AM – 4:00 PM</dd>
-          <dt class="font-semibold">Holidays</dt>
-          <dd class="text-neutral-600">Closed</dd>
-        </dl>
+        <HoursList />
         <p class="text-sm text-neutral-600">
           Seasonal hours apply November – March.
         </p>
@@ -91,14 +133,15 @@ import BrandLogo from "@/components/brand/BrandLogo.astro";
         <h2 class="text-lg font-bold">Find us</h2>
         <iframe
           src="https://www.google.com/maps?q=22040+Township+Rd+522,+Sherwood+Park,+AB&z=14&output=embed"
-          title="Map showing Sherwood Park Tree Nursery at 22040 Township Rd 522, Sherwood Park, AB"
+          title="Map showing Sherwood Nursery at 22040 Township Rd 522, Sherwood Park, AB"
           class="h-48 w-full rounded-lg border border-neutral-300 bg-neutral-200"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
           allowfullscreen
         ></iframe>
         <address class="not-italic text-[15px]">
-          22040 Township Rd 522<br />
+          22040 Township Rd 522
+          <br />
           Sherwood Park, AB
         </address>
         <div class="flex flex-wrap gap-4 text-[15px] font-semibold">
@@ -159,3 +202,14 @@ import BrandLogo from "@/components/brand/BrandLogo.astro";
     </ul>
   </nav>
 </section>
+
+<style>
+  .jim {
+    background: linear-gradiant(
+      to right,
+      rgb(254, 240, 138),
+      rgb(187, 247, 208),
+      rgb(134, 239, 172)
+    );
+  }
+</style>

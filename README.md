@@ -1,6 +1,6 @@
-# Sherwood Nurseries
+# Sherwood Nursery
 
-Website for Sherwood Nurseries (sherwoodnursaries.ca), built with
+Website for Sherwood Nursery (sherwoodnursaries.ca), built with
 [Astro](https://docs.astro.build), Tailwind CSS v4 and MDX.
 
 ## Requirements

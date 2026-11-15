@@ -1,0 +1,54 @@
+---
+/**
+ * Draft D: HeroShowcase.astro — centred headline over a category rail.
+ * Message first, then the three shop categories and the visit card as
+ * four equal cards. 4 → 2 → 1 columns.
+ */
+import HeroIntro from "./HeroIntro.astro";
+import PromoCard from "./PromoCard.astro";
+import VisitCard from "./VisitCard.astro";
+import treesPhoto from "@/assets/placeholder/trees.jpg";
+import shrubsPhoto from "@/assets/placeholder/flowering-perenial.png";
+import perennialsPhoto from "@/assets/placeholder/perenial.png";
+---
+
+<section
+  aria-labelledby="hero-showcase-heading"
+  class="bg-linear-to-b from-sherwood-mint from-60% to-sherwood-paper"
+>
+  <div class="mx-auto w-full max-w-[1440px] px-4 py-14 sm:px-8 sm:py-20 lg:px-12 xl:px-24">
+    <HeroIntro
+      headingId="hero-showcase-heading"
+      align="center"
+      class="mx-auto max-w-3xl [&_h1]:max-w-[20ch]"
+    />
+
+    <div class="mt-14 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <PromoCard
+        tint="sage"
+        eyebrow="Fruit trees to evergreens"
+        title="Trees"
+        href="/products/trees"
+        linkLabel="Shop trees"
+        image={treesPhoto}
+      />
+      <PromoCard
+        tint="lavender"
+        eyebrow="Hedges & flowering"
+        title="Shrubs"
+        href="/products/shrubs"
+        linkLabel="Shop shrubs"
+        image={shrubsPhoto}
+      />
+      <PromoCard
+        tint="peach"
+        eyebrow="Come back every spring"
+        title="Perennials"
+        href="/products/perennials"
+        linkLabel="Shop perennials"
+        image={perennialsPhoto}
+      />
+      <VisitCard image={false} />
+    </div>
+  </div>
+</section>

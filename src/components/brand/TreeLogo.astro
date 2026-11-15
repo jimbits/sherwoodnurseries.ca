@@ -1,6 +1,6 @@
 ---
 // src/components/brand/TreeLogo.astro
-// Inline Sherwood Nurseries tree logo (from public/logo-4.svg).
+// Inline Sherwood Nursery tree logo (from public/logo-4.svg).
 // Colour comes from `currentColor`, so set it with a text-* class.
 import type { HTMLAttributes } from "astro/types";
 import { cn } from "@/lib/utils/cn";
@@ -10,7 +10,7 @@ interface Props extends HTMLAttributes<"svg"> {
   label?: string;
 }
 
-const { label = "Sherwood Nurseries", class: className, ...rest } = Astro.props;
+const { label = "Sherwood Nursery", class: className, ...rest } = Astro.props;
 ---
 
 <svg

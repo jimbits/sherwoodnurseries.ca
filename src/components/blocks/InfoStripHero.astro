@@ -1,0 +1,227 @@
+---
+/**
+ * InfoStripHero.astro — home page hero, "info strip" layout.
+ * Spec: design/hero/hero-banner.md · Visual ref: design/reference/Info-Strip-Banner.png
+ *
+ * Photo + gradient, white intro panel on the left, three-card stack on the
+ * right (Shop plants · Book a consultation · Plan your visit). Below lg it
+ * stacks to one column, intro first.
+ *
+ * <InfoStripHero />
+ * <InfoStripHero trust={["4.9 ★ · 230 Google reviews", "Since 1998", "1-year plant warranty"]} />
+ */
+import type { HTMLAttributes } from "astro/types";
+import { Picture } from "astro:assets";
+import { cn } from "@/lib/utils/cn";
+import { getVisitStatus } from "@/data/hours";
+import HoursDialog from "@/components/hours/HoursDialog.astro";
+import DirectionsDialog from "@/components/appbar/DirectionsDialog.astro";
+import yardPhoto from "@/assets/sherwood-nursery-yard.webp";
+import treesPhoto from "@/assets/placeholder/trees.jpg";
+import shrubsPhoto from "@/assets/placeholder/spring-perenial.png";
+import perennialsPhoto from "@/assets/placeholder/perenial.png";
+import newPhoto from "@/assets/placeholder/cherry-tree.png";
+
+type Props = HTMLAttributes<"section"> & {
+  /** Trust row items. The row stays hidden until real values are supplied. */
+  trust?: string[];
+};
+
+const { class: className, trust = [], ...rest } = Astro.props;
+
+// TODO: routes not built yet (see Open items in the spec).
+const routes = {
+  shop: "/products",
+  plantFinder: "/plant-finder",
+  consultation: "/services/consultation",
+};
+
+// Placeholder photos from src/assets/placeholder; swap for real ones later.
+// Images are decorative: the tile label already names the category.
+const categories = [
+  { label: "Trees", href: "/products/trees", image: treesPhoto },
+  { label: "Shrubs", href: "/products/shrubs", image: shrubsPhoto },
+  { label: "Perennials", href: "/products/perennials", image: perennialsPhoto },
+  { label: "New this week", href: "/products/new", image: newPhoto },
+];
+
+// Rendered at build time; the script below refreshes it in the browser.
+const status = getVisitStatus();
+
+const textLink =
+  "inline-flex min-h-11 items-center font-bold underline decoration-2 underline-offset-4 transition-colors hover:text-primary";
+---
+
+<section
+  aria-labelledby="hero-heading"
+  class={cn("relative isolate overflow-hidden bg-mist-900", className)}
+  {...rest}
+>
+  <!-- Background photo + gradient -->
+  <Picture
+    src={yardPhoto}
+    formats={["avif", "webp"]}
+    alt="Rows of potted trees and shrubs in the Sherwood Nurseries yard"
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 -z-20 size-full object-cover"
+  />
+  <div
+    class="absolute inset-0 -z-10 bg-linear-to-b from-mist-900/30 to-mist-900"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div
+    class="mx-auto grid w-full max-w-[1440px] gap-6 px-4 py-8 sm:px-8 sm:py-12 lg:min-h-[548px] lg:grid-cols-[minmax(0,640fr)_minmax(0,520fr)] lg:items-center lg:gap-14 lg:px-12 lg:py-12 xl:px-24"
+  >
+    <!-- Intro panel -->
+    <div class="bg-surface p-6 text-ink sm:p-10">
+      <p class="text-[14px] font-semibold uppercase tracking-wider text-muted">
+        Tree nursery &amp; garden centre · Sherwood Park, AB
+      </p>
+      <h1
+        id="hero-heading"
+        class="mt-4 text-[34px] font-bold leading-[1.1] tracking-tight text-balance sm:text-[46px]"
+      >
+        Trees, shrubs &amp; perennials for Sherwood Park gardens
+      </h1>
+      <p class="mt-5 text-lg text-muted text-pretty">
+        Walk the rows, talk to our growers, and leave with plants that suit your
+        soil, sun and space.
+      </p>
+
+      <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <a
+          href={routes.shop}
+          class="inline-flex min-h-[52px] items-center justify-center rounded-sm bg-ink px-7 text-[17px] font-bold text-surface transition-colors hover:bg-ink/85"
+        >
+          Shop trees &amp; shrubs
+        </a>
+        <a
+          href={routes.plantFinder}
+          class="inline-flex min-h-[52px] items-center justify-center rounded-sm border-2 border-ink px-7 text-[17px] font-bold text-ink transition-colors hover:bg-ink/5"
+        >
+          Find your plant
+        </a>
+      </div>
+
+      {
+        trust.length > 0 && (
+          <ul class="mt-8 grid gap-3 border-t border-border pt-5 text-[15px] text-muted sm:grid-cols-3 sm:gap-6">
+            {trust.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <!-- Card stack -->
+    <div class="flex flex-col gap-4">
+      <!-- 1. Shop plants -->
+      <nav
+        aria-labelledby="shop-plants-heading"
+        class="rounded-md bg-ink p-5 text-app sm:p-6"
+      >
+        <h2 id="shop-plants-heading" class="text-2xl font-bold">Shop plants</h2>
+        <ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          {
+            categories.map(({ label, href, image }) => (
+              <li>
+                <a
+                  href={href}
+                  class="group flex h-full flex-col overflow-hidden rounded-sm bg-surface text-ink"
+                >
+                  <span class="block h-[76px] overflow-hidden bg-primary-tint">
+                    <Picture
+                      src={image}
+                      formats={["avif", "webp"]}
+                      widths={[160, 320]}
+                      sizes="(min-width: 640px) 120px, 45vw"
+                      alt=""
+                      class="size-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </span>
+                  <span class="flex min-h-11 items-center justify-center px-2 py-2 text-center text-[13px] font-bold group-hover:underline">
+                    {label}
+                  </span>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <!-- 2. Book a consultation (whole card is the link) -->
+      <a
+        href={routes.consultation}
+        class="group flex items-center gap-4 rounded-md border border-border bg-surface p-6 text-ink transition-colors hover:bg-app"
+      >
+        <span class="flex-1">
+          <span class="block text-[22px] font-bold leading-tight">
+            Book a consultation
+          </span>
+          <span class="mt-1 block text-muted">
+            Get a plan for your soil, sun and space
+          </span>
+        </span>
+        <svg
+          viewBox="0 0 24 24"
+          class="size-7 shrink-0 fill-none stroke-current stroke-2 transition-transform group-hover:translate-x-1"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 12h16M14 6l6 6-6 6"></path>
+        </svg>
+      </a>
+
+      <!-- 3. Plan your visit -->
+      <div class="rounded-md border border-border bg-surface p-6 text-ink">
+        <h2 class="text-[22px] font-bold leading-tight">Plan your visit</h2>
+        <p
+          class="group mt-2 flex items-start gap-2.5"
+          data-visit-status
+          data-open={String(status.open)}
+        >
+          <span
+            class="mt-[0.45em] size-2.5 shrink-0 rounded-full border-2 border-current group-data-[open=true]:bg-current"
+            aria-hidden="true"></span>
+          <span>
+            <span data-visit-label>{status.label}</span>
+            <span aria-hidden="true"> · </span>
+            <span data-visit-detail class="text-muted">{status.detail}</span>
+          </span>
+        </p>
+        <div class="mt-1 flex flex-wrap gap-x-6">
+          <DirectionsDialog triggerClass={cn(textLink, "cursor-pointer")}>
+            <Fragment slot="trigger">Get directions</Fragment>
+          </DirectionsDialog>
+          <HoursDialog triggerClass={cn(textLink, "cursor-pointer")}>
+            <Fragment slot="trigger">All hours</Fragment>
+          </HoursDialog>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Refresh the open/closed status so a cached page never shows a stale state.
+  import { getVisitStatus } from "@/data/hours";
+
+  function renderStatus() {
+    const s = getVisitStatus();
+    document
+      .querySelectorAll<HTMLElement>("[data-visit-status]")
+      .forEach((el) => {
+        el.dataset.open = String(s.open);
+        el.querySelector("[data-visit-label]")!.textContent = s.label;
+        el.querySelector("[data-visit-detail]")!.textContent = s.detail;
+      });
+  }
+
+  renderStatus();
+  setInterval(renderStatus, 60_000);
+</script>

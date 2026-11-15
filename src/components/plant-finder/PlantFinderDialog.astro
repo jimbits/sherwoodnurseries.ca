@@ -1,0 +1,184 @@
+---
+/**
+ * PlantFinderDialog.astro — the Plant Finder modal, after
+ * design/reference/plant-finder.png: three selects + Find plants, popular
+ * searches, and a call-us fallback. Submits GET to /plant-finder.
+ *
+ * Rendered ONCE (in Layout.astro). Anything with `data-plant-finder-open`
+ * opens it — the hero card, the app-bar button, the mobile menu.
+ *
+ * <button type="button" data-plant-finder-open aria-haspopup="dialog">…</button>
+ */
+import { finderFields, popularSearches } from "@/data/plant-finder";
+import { business } from "@/data/business";
+import HeroIcon from "@/components/blocks/hero/HeroIcon.astro";
+---
+
+<dialog
+  id="plant-finder-dialog"
+  aria-labelledby="plant-finder-title"
+  aria-describedby="plant-finder-lead"
+  data-plant-finder-dialog
+  class="plant-finder-dialog m-auto w-[min(52rem,calc(100%-2rem))] max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-lg border border-sherwood-forest/10 bg-sherwood-paper p-0 text-sherwood-forest shadow-float"
+>
+  <div class="flex items-start justify-between gap-4 px-6 pt-6 sm:px-8 sm:pt-8">
+    <div>
+      <p class="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-wider">
+        <HeroIcon name="leaf" class="size-4 text-sherwood-leaf" />
+        Plant finder
+      </p>
+      <h2
+        id="plant-finder-title"
+        class="mt-2 text-[28px] font-bold leading-tight tracking-tight text-balance sm:text-[34px]"
+      >
+        Find the right plant for your yard.
+      </h2>
+      <p id="plant-finder-lead" class="mt-2 text-[16px] leading-relaxed text-sherwood-forest-soft">
+        Tell us about your space and we'll show what's hardy, in stock and ready to plant.
+      </p>
+    </div>
+    <button
+      type="button"
+      data-plant-finder-close
+      aria-label="Close plant finder"
+      class="grid size-11 shrink-0 cursor-pointer place-items-center rounded-pill text-sherwood-forest-soft transition-colors hover:bg-sherwood-mint hover:text-sherwood-forest"
+    >
+      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </div>
+
+  <form
+    method="get"
+    action="/plant-finder"
+    class="mx-6 mt-6 grid gap-4 rounded-sm border border-sherwood-lime-line bg-sherwood-mint p-4 sm:mx-8 sm:p-5 md:grid-cols-[1fr_1fr_1fr_auto] md:items-end"
+  >
+    {
+      finderFields.map((field, i) => (
+        <label class="flex flex-col gap-1.5 text-[14px] font-semibold">
+          {field.label}
+          <select
+            name={field.name}
+            autofocus={i === 0}
+            class="min-h-12 w-full cursor-pointer rounded-sm border border-sherwood-forest/25 bg-sherwood-paper px-3 text-[16px] font-normal text-sherwood-forest focus:border-sherwood-forest focus:outline-2 focus:outline-offset-1 focus:outline-sherwood-leaf"
+          >
+            <option value="">{field.anyLabel}</option>
+            {field.options.map((o) => (
+              <option value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </label>
+      ))
+    }
+    <button
+      type="submit"
+      class="inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-sm bg-sherwood-forest px-6 text-[16px] font-bold text-sherwood-paper transition-colors hover:bg-sherwood-forest-hover"
+    >
+      <HeroIcon name="search" class="size-5" />
+      Find plants
+    </button>
+  </form>
+
+  <div class="flex flex-wrap items-center gap-x-4 gap-y-1 px-6 pb-6 pt-4 text-[15px] sm:px-8 sm:pb-8">
+    <span class="text-sherwood-forest-soft">Popular:</span>
+    {
+      popularSearches.map((s) => (
+        <a
+          href={s.href}
+          class="inline-flex min-h-11 items-center underline decoration-1 underline-offset-4 hover:decoration-2"
+        >
+          {s.label}
+        </a>
+      ))
+    }
+    <span class="hidden h-5 w-px bg-sherwood-forest/20 sm:block" aria-hidden="true"></span>
+    <a
+      href={business.phoneHref}
+      class="inline-flex min-h-11 items-center gap-1.5 font-bold underline decoration-1 underline-offset-4 hover:decoration-2"
+    >
+      Not sure? Call our staff
+      <HeroIcon name="arrow" class="size-4" />
+    </a>
+  </div>
+</dialog>
+
+<style>
+  .plant-finder-dialog,
+  .plant-finder-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 180ms ease-out,
+      display 180ms allow-discrete,
+      overlay 180ms allow-discrete;
+  }
+
+  .plant-finder-dialog::backdrop {
+    background-color: rgb(20 28 20 / 0.45);
+  }
+
+  .plant-finder-dialog[open],
+  .plant-finder-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .plant-finder-dialog[open],
+    .plant-finder-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .plant-finder-dialog,
+    .plant-finder-dialog::backdrop {
+      transition: none;
+    }
+  }
+
+  :global(html:has(dialog[data-plant-finder-dialog][open])) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const getDialog = () =>
+    document.querySelector<HTMLDialogElement>("[data-plant-finder-dialog]");
+
+  const open = () => {
+    const dialog = getDialog();
+    if (dialog && !dialog.open) dialog.showModal();
+  };
+
+  // Delegated, bound once: any [data-plant-finder-open] on the page opens the
+  // finder (looked up at click time, so it survives page swaps).
+  document.addEventListener("click", (event) => {
+    const trigger = (event.target as Element | null)?.closest("[data-plant-finder-open]");
+    if (!trigger) return;
+    event.preventDefault();
+    // Inside another modal (e.g. the mobile menu)? Open once that one closes.
+    const host = trigger.closest("dialog[open]");
+    if (host instanceof HTMLDialogElement && host !== getDialog()) {
+      host.addEventListener("close", open, { once: true });
+    } else {
+      open();
+    }
+  });
+
+  function initPlantFinder() {
+    const dialog = getDialog();
+    if (!dialog || dialog.dataset.bound) return;
+    dialog.dataset.bound = "true";
+
+    dialog
+      .querySelectorAll("[data-plant-finder-close]")
+      .forEach((btn) => btn.addEventListener("click", () => dialog.close()));
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+
+  initPlantFinder();
+  document.addEventListener("astro:page-load", initPlantFinder);
+</script>

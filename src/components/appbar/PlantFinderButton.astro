@@ -1,0 +1,36 @@
+---
+/**
+ * PlantFinderButton.astro — app-bar trigger for the Plant Finder dialog,
+ * styled like DirectionsButton (icon, small label, bold line below).
+ *
+ * <PlantFinderButton class="hidden lg:block" />
+ */
+import { cn } from "@/lib/utils/cn";
+import HeroIcon from "@/components/blocks/hero/HeroIcon.astro";
+
+type Props = { class?: string };
+const { class: className } = Astro.props;
+---
+
+<button
+  type="button"
+  data-plant-finder-open
+  aria-haspopup="dialog"
+  aria-controls="plant-finder-dialog"
+  class={cn(
+    "cursor-pointer whitespace-nowrap rounded-sm px-3 py-2 transition-colors hover:bg-sherwood-mint",
+    className,
+  )}
+>
+  <span class="flex items-center gap-2">
+    <HeroIcon name="search" class="size-7 stroke-2 text-sherwood-leaf" />
+    <span class="flex flex-col items-start">
+      <span class="block text-xs font-bold uppercase tracking-[.1px] text-sherwood-forest-soft">
+        Plant finder
+      </span>
+      <span class="block text-[14px] font-bold leading-tight text-sherwood-forest">
+        Find the right plant
+      </span>
+    </span>
+  </span>
+</button>

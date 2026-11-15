@@ -1,0 +1,44 @@
+---
+/**
+ * Hero.astro — home page hero (was draft B, "split screen").
+ * Mint text half on the left; photo runs edge-to-edge on the right. Below,
+ * a "bridge strip" of two action cards — Plant Finder and Plan your visit —
+ * straddles the hero's bottom edge at lg+, and stacks under the hero below lg.
+ */
+import { Picture } from "astro:assets";
+import HeroIntro from "./HeroIntro.astro";
+import VisitCard from "./VisitCard.astro";
+import PlantFinderCard from "./PlantFinderCard.astro";
+import photo from "@/assets/placeholder/landscape-ideas.jpeg";
+---
+
+<section aria-labelledby="hero-heading" class="bg-sherwood-paper pb-10 lg:pb-16">
+  <div class="grid bg-sherwood-mint lg:min-h-[680px] lg:grid-cols-2">
+    <div
+      class="flex items-center px-4 py-14 sm:px-8 sm:py-20 lg:pb-36 lg:pt-16 lg:pl-12 lg:pr-16 xl:pl-24"
+    >
+      <HeroIntro headingId="hero-heading" class="w-full max-w-[40rem] lg:ml-auto" />
+    </div>
+
+    <div class="relative min-h-[320px] sm:min-h-[420px]">
+      <Picture
+        src={photo}
+        formats={["avif", "webp"]}
+        widths={[640, 960, 1440]}
+        sizes="(min-width: 1024px) 50vw, 100vw"
+        alt="Perennial border with rocks and a tipped terracotta pot spilling flowers"
+        loading="eager"
+        fetchpriority="high"
+        class="absolute inset-0 size-full object-cover"
+      />
+    </div>
+  </div>
+
+  <!-- Bridge strip: overlaps the hero's bottom edge on desktop -->
+  <div
+    class="relative z-10 mx-auto -mt-6 grid max-w-[1200px] gap-4 px-4 sm:-mt-10 sm:px-8 md:grid-cols-2 lg:-mt-24 lg:gap-6 lg:px-12"
+  >
+    <PlantFinderCard class="h-full shadow-float" />
+    <VisitCard image={false} class="h-full shadow-float" />
+  </div>
+</section>

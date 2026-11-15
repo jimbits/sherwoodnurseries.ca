@@ -1,0 +1,49 @@
+---
+/**
+ * Draft A: HeroPhoto.astro — full-bleed background photo.
+ * Forest-green gradient from the left keeps the white intro text readable;
+ * right column stacks a promo card and the visit card.
+ */
+import { Picture } from "astro:assets";
+import HeroIntro from "./HeroIntro.astro";
+import PromoCard from "./PromoCard.astro";
+import VisitCard from "./VisitCard.astro";
+import bgPhoto from "@/assets/placeholder/trees.jpg";
+import newPhoto from "@/assets/placeholder/cherry-tree.png";
+---
+
+<section aria-labelledby="hero-photo-heading" class="relative isolate overflow-hidden bg-sherwood-forest">
+  <Picture
+    src={bgPhoto}
+    formats={["avif", "webp"]}
+    widths={[640, 1024, 1241]}
+    sizes="100vw"
+    alt="Rows of young staked trees in bloom at the nursery"
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 -z-20 size-full object-cover"
+  />
+  <div
+    class="absolute inset-0 -z-10 bg-linear-to-b from-sherwood-forest/75 to-sherwood-forest/95 lg:bg-linear-to-r lg:from-sherwood-forest/95 lg:via-sherwood-forest/70 lg:to-sherwood-forest/20"
+    aria-hidden="true"
+  >
+  </div>
+
+  <div
+    class="mx-auto grid w-full max-w-[1440px] gap-10 px-4 py-14 sm:px-8 sm:py-20 lg:min-h-[640px] lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:items-center lg:gap-16 lg:px-12 xl:px-24"
+  >
+    <HeroIntro tone="dark" headingId="hero-photo-heading" />
+
+    <div class="flex flex-col gap-4">
+      <PromoCard
+        tint="lavender"
+        eyebrow="New this week"
+        title="Fresh arrivals in the rows"
+        href="/products/new"
+        linkLabel="See what's new"
+        image={newPhoto}
+      />
+      <VisitCard image={false} />
+    </div>
+  </div>
+</section>

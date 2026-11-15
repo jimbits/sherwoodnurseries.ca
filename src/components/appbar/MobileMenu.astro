@@ -74,10 +74,10 @@ const isActive = (href: string): boolean =>
   >
     <div class="flex h-full flex-col">
       <div class="flex items-center justify-between">
-        <a href="/" class="flex min-w-0 items-center gap-3" aria-label="Sherwood Park Tree Nursery home">
+        <a href="/" class="flex min-w-0 items-center gap-3" aria-label="Sherwood Nursery home">
           <Logo class="size-12 shrink-0" aria-hidden="true" />
           <span class="min-w-0 leading-tight">
-            <span class="block text-lg font-bold">Sherwood Park Tree Nursery</span>
+            <span class="block text-lg font-bold">Sherwood Nursery</span>
             <span class="block text-sm font-medium text-olive-700">Take Root &amp; Grow Strong</span>
           </span>
         </a>
@@ -102,8 +102,20 @@ const isActive = (href: string): boolean =>
         </button>
       </div>
 
-      <!-- Group 1: contact links -->
+      <!-- Group 1: plant finder + contact links -->
       <ul class="mt-5 flex flex-col border-b border-olive-950/15 pb-3">
+        <li>
+          <button
+            type="button"
+            class="menu-link w-full cursor-pointer text-left"
+            aria-haspopup="dialog"
+            data-plant-finder-open
+            data-menu-dismiss
+          >
+            <span class="menu-label">Plant finder</span>
+            <span class="menu-detail">Find the right plant for your yard</span>
+          </button>
+        </li>
         <li>
           <a href={`tel:${phone.replace(/\D/g, "")}`} class="menu-link">
             <span class="menu-label">Call us</span>
@@ -241,7 +253,9 @@ const isActive = (href: string): boolean =>
 
       openBtn.addEventListener("click", open);
       closeBtn.addEventListener("click", close);
-      dialog.querySelectorAll("a").forEach((a) => a.addEventListener("click", close));
+      dialog
+        .querySelectorAll("a, [data-menu-dismiss]")
+        .forEach((el) => el.addEventListener("click", close));
     });
   }
 

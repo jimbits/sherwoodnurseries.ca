@@ -6,6 +6,7 @@ import DirectionsDialog from "./DirectionsDialog.astro";
 import EmailDialog from "./EmailDialog.astro";
 import MobileMenu from "./MobileMenu.astro";
 import PhoneButton from "./PhoneButton.astro";
+import PlantFinderButton from "./PlantFinderButton.astro";
 import BrandLogo from "@/components/brand/BrandLogo.astro";
 
 export interface Props extends HTMLAttributes<"div"> {}
@@ -14,12 +15,11 @@ const { class: className, ...props } = Astro.props;
 ---
 
 <div class="order-1 flex items-center justify-between gap-4 bg-white px-4 py-3 sm:order-2 sm:px-6 md:py-4 lg:px-8">
-  <Brand class="flex gap-2 min-w-0 items-center">
-    <!-- Text hidden on phones; it shows in the mobile menu header instead -->
+  <Brand class="flex min-w-0 flex-row items-center gap-2">
     <BrandLogo />
-    <figcaption class="hidden min-w-0 leading-tight sm:block">
+    <figcaption class="flex min-w-0 flex-col leading-tight">
       <BrandText class="text-base font-bold text-olive-950 sm:text-lg sm:whitespace-nowrap">
-        Sherwood Park Tree Nursery
+        Sherwood Nursery
       </BrandText>
       <BrandTagline class="text-xs font-medium tracking-tight text-olive-700 sm:text-sm">
         Take Root & Grow Strong
@@ -28,6 +28,7 @@ const { class: className, ...props } = Astro.props;
   </Brand>
 
   <div class="flex shrink-0 items-center gap-6 xl:gap-12">
+    <PlantFinderButton class="hidden lg:block" />
     <DirectionsDialog class="hidden xl:block" />
     <EmailDialog class="hidden lg:block" />
     <PhoneButton class="hidden sm:block" />

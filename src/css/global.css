@@ -34,6 +34,23 @@
   --color-on-accent: oklch(25.45% 0.0623 38.32); /* never white on coral */
   --color-danger: oklch(50.13% 0.1783 28.7);
 
+  /* Marketing palette (heroes, promo cards). Sampled from
+     design/reference/color-selection.png + example-cards-right-column.png.
+     Fixed across themes: these sections always render light. */
+  --color-sherwood-forest: oklch(29.55% 0.0568 144.74); /* headings, solid buttons */
+  --color-sherwood-forest-hover: oklch(36.26% 0.0643 148.11);
+  --color-sherwood-forest-soft: oklch(44.92% 0.0313 146.71); /* body copy on light tints */
+  --color-sherwood-mint: oklch(95.71% 0.0135 134.9); /* hero background */
+  --color-sherwood-mint-deep: oklch(91.95% 0.0198 125.83); /* image wells */
+  --color-sherwood-lime-tint: oklch(96.1% 0.0314 122.64); /* eyebrow pills, badges */
+  --color-sherwood-lime-line: oklch(91.03% 0.0504 125.83); /* pill borders */
+  --color-sherwood-leaf: oklch(60.45% 0.088 129.09); /* icons only, not text (3.9:1) */
+  --color-sherwood-sage: oklch(82.04% 0.0332 140.98); /* promo card tints */
+  --color-sherwood-lavender: oklch(83.51% 0.0375 285.56);
+  --color-sherwood-peach: oklch(84.38% 0.056 65.17);
+  --color-sherwood-cream: oklch(95.41% 0.0108 76.6);
+  --color-sherwood-paper: oklch(100% 0 0);
+
   /* Typography */
   --font-sans: "Nunito", ui-rounded, system-ui, sans-serif;
 

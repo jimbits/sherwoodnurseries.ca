@@ -1,0 +1,34 @@
+---
+/**
+ * /hero-drafts — review page for the four hero layout drafts.
+ * Dev/review only: delete once a direction is picked. Each draft renders an
+ * h1, so this page intentionally breaks the one-h1 rule.
+ */
+import Layout from "@/layouts/Layout.astro";
+import HeroPhoto from "@/components/blocks/hero/HeroPhoto.astro";
+import Hero from "@/components/blocks/hero/Hero.astro";
+import HeroBento from "@/components/blocks/hero/HeroBento.astro";
+import HeroShowcase from "@/components/blocks/hero/HeroShowcase.astro";
+
+const drafts = [
+  { label: "A · Full-bleed photo", Component: HeroPhoto },
+  { label: "B · Split screen", Component: Hero },
+  { label: "C · Bento grid", Component: HeroBento },
+  { label: "D · Centred showcase", Component: HeroShowcase },
+];
+---
+
+<Layout hero={false}>
+  <main>
+    {
+      drafts.map(({ label, Component }) => (
+        <>
+          <p class="bg-sherwood-forest px-4 py-2 text-center text-[13px] font-bold uppercase tracking-widest text-sherwood-lime-tint">
+            Draft {label}
+          </p>
+          <Component />
+        </>
+      ))
+    }
+  </main>
+</Layout>

@@ -1,0 +1,51 @@
+---
+/**
+ * Draft C: HeroBento.astro — bento grid, after
+ * design/reference/example-cards-right-column.png.
+ * Large cream card (intro + photo) on the left; tinted promo card and the
+ * visit card stacked on the right.
+ */
+import { Picture } from "astro:assets";
+import HeroIntro from "./HeroIntro.astro";
+import PromoCard from "./PromoCard.astro";
+import VisitCard from "./VisitCard.astro";
+import featurePhoto from "@/assets/placeholder/spring-perenial.png";
+import treesPhoto from "@/assets/placeholder/apple-tree.png";
+---
+
+<section aria-labelledby="hero-bento-heading" class="bg-sherwood-mint">
+  <div
+    class="mx-auto grid w-full max-w-[1440px] gap-4 px-4 py-6 sm:px-8 sm:py-10 lg:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)] lg:px-12 xl:px-24"
+  >
+    <!-- Feature card -->
+    <div
+      class="relative isolate flex overflow-hidden rounded-sm bg-sherwood-cream lg:row-span-2 lg:min-h-[620px]"
+    >
+      <HeroIntro
+        headingId="hero-bento-heading"
+        class="w-full p-7 sm:p-12 xl:max-w-[60%] xl:pr-4 [&_h1]:xl:text-[54px]"
+      />
+      <Picture
+        src={featurePhoto}
+        formats={["avif", "webp"]}
+        widths={[480, 960]}
+        sizes="40vw"
+        alt="Pink hydrangeas in full bloom"
+        loading="eager"
+
+        class="absolute inset-y-0 right-0 -z-10 hidden h-full w-[42%] object-cover [mask-image:linear-gradient(to_right,transparent,black_30%)] xl:block"
+      />
+    </div>
+
+    <PromoCard
+      tint="lavender"
+      eyebrow="Fruit trees to evergreens"
+      title="Trees grown for Alberta winters"
+      href="/products/trees"
+      linkLabel="Shop trees"
+      image={treesPhoto}
+      class="lg:min-h-0"
+    />
+    <VisitCard image={false} showHours />
+  </div>
+</section>

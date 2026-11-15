@@ -16,17 +16,23 @@ interface Props extends HTMLAttributes<"button"> {
 const { class: className, email, label, ...rest } = Astro.props;
 ---
 
-<button class={cn("whitespace-nowrap  no-underline  ", className)} {...rest}>
+<button
+  class={cn(
+    "cursor-pointer whitespace-nowrap rounded-sm px-3 py-2 no-underline transition-colors hover:bg-sherwood-mint",
+    className,
+  )}
+  {...rest}
+>
   <div class="flex items-center gap-2">
-    <svg class="w-5 h-5 fill-olive-500 mt-1.5" viewBox="0 0 18 18">
+    <svg class="mt-1.5 h-5 w-5 fill-sherwood-leaf" viewBox="0 0 18 18" aria-hidden="true">
       <path d="M6.84,0.003c0.802,0.01 0.795,0.009 5.495,0.009c5.529,0 5.611,-0.031 5.662,0.194c0.005,0.022 0.004,13.683 0,13.743c-0.014,0.213 -0.242,0.204 -0.267,0.203c-0.264,-0.01 -0.262,-0.009 -7.293,-0.009c-7.298,-0 -7.382,0.026 -7.418,-0.182c-0.008,-0.047 -0.008,-13.699 0,-13.769c0.026,-0.23 0.122,-0.19 3.821,-0.19Zm-2.298,12.855l11.589,0c0.604,-0 0.869,0.203 0.869,-0.574c0,-7.383 0.009,-7.445 -0.07,-7.456c-0.155,-0.021 -6.209,5.376 -6.394,5.397c-0.243,0.027 -0.221,-0.093 -2.567,-2.112c-3.519,-3.028 -3.942,-3.499 -3.959,-3.171c-0.035,0.664 -0.001,6.993 0.002,7.601c0.002,0.466 0.17,0.303 0.53,0.316Zm0.999,-11.561c-0.782,0 -1.417,-0.032 -1.487,0.073c-0.033,0.049 -0.052,0.182 -0.041,1.531c0.003,0.394 0.165,0.414 3.494,3.274c2.879,2.473 2.87,2.545 3.03,2.525c0.21,-0.026 5.768,-4.903 6.264,-5.339c0.097,-0.085 0.303,-0.266 0.196,-1.869c-0.014,-0.213 -0.243,-0.204 -0.268,-0.203c-0.26,0.01 -0.259,0.009 -11.189,0.009Z" />
       <path d="M4.043,16.714c1.234,0.022 9.445,0.002 10.691,0.009c0.223,0.001 0.269,0.025 0.269,0.317c0,0.666 0.145,0.965 -0.369,0.959c-0.037,-0 -14.369,0.001 -14.39,-0.001c-0.335,-0.024 -0.226,-0.874 -0.226,-1.345c0,-12.562 -0.001,-12.556 0.005,-12.605c0.03,-0.265 0.862,-0.222 0.933,-0.136c0.139,0.168 0.02,12.211 0.066,12.62c0.025,0.224 0.118,0.181 3.022,0.181Z" />
     </svg>
     <div class="flex flex-col items-start">
-      <span class="block text-xs font-bold uppercase tracking-[.1px] text-olive-500">
+      <span class="block text-xs font-bold uppercase tracking-[.1px] text-sherwood-forest-soft">
         Email Us
       </span>
-      <span class="block text-[14px] leading-2 text-olive-900 font-bold">
+      <span class="block text-[14px] leading-2 font-bold text-sherwood-forest">
         info@sherwoodnurseries.ca
       </span>
     </div>

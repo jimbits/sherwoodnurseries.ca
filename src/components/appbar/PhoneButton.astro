@@ -15,7 +15,7 @@ interface Props extends Omit<HTMLAttributes<"a">, "href"> {
 
 const {
   phone = "(587)-545-6929",
-  label = "Call Us For Free?",
+  label = "Questions Call For Free?",
   class: className,
   ...rest
 } = Astro.props;
@@ -25,7 +25,7 @@ const href = `tel:5875456929`;
 <a
   href={href}
   class={cn(
-    "whitespace-nowrap rounded-md    no-underline hover:text-[#0f4b39]  ",
+    "whitespace-nowrap rounded-sm bg-sherwood-forest px-4 py-3 text-sherwood-paper no-underline transition-colors hover:bg-sherwood-forest-hover",
     className,
   )}
   {...rest}
@@ -85,10 +85,10 @@ const href = `tel:5875456929`;
       <path d="M18 15h4l2 5-2.5 1.5a10 10 0 0 0 5 5L28 24l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 16 17a2 2 0 0 1 2-2z" />
     </svg> -->
     <span class="sr-only sm:not-sr-only">
-      <span class="block text-xs font-bold uppercase tracking-[.1px] text-olive-700">
+      <span class="block text-xs font-bold uppercase tracking-[.1px] text-sherwood-lime-line">
         {label}
       </span>
-      <span class="block text-sm text-center font-bold leading-tight text-olive-950">
+      <span class="block text-center text-sm font-bold leading-tight text-sherwood-paper">
         {phone}
       </span>
     </span>
