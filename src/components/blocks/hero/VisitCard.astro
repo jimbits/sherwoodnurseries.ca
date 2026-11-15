@@ -102,22 +102,7 @@ const link =
 
 <script>
   // Refresh status in the browser so a cached page never shows a stale state.
-  import { getVisitStatus } from "@/data/hours";
+  import { startVisitStatus } from "@/scripts/visit-status";
 
-  function render() {
-    const s = getVisitStatus();
-    document.querySelectorAll<HTMLElement>("[data-visit-status]").forEach((el) => {
-      el.dataset.open = String(s.open);
-      const set = (sel: string, text: string) => {
-        const node = el.querySelector(sel);
-        if (node) node.textContent = text;
-      };
-      set("[data-visit-label]", s.label);
-      set("[data-visit-detail]", s.detail);
-      set("[data-visit-badge]", s.open ? "Open now" : "Closed");
-    });
-  }
-
-  render();
-  setInterval(render, 60_000);
+  startVisitStatus();
 </script>

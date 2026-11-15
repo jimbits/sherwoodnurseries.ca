@@ -12,6 +12,7 @@
  * <HeroIntro tone="dark" align="center" headingId="…" />
  */
 import { cn } from "@/lib/utils/cn";
+import { getVisitStatus } from "@/data/hours";
 import HeroIcon from "./HeroIcon.astro";
 
 type Props = {
@@ -24,9 +25,20 @@ type Props = {
 const { headingId, tone = "light", align = "left", class: className } = Astro.props;
 const dark = tone === "dark";
 
-const features = [
-  { icon: "sprout", text: "Trees, shrubs & perennials hardy to zone 3" },
-  { icon: "truck", text: "Delivery & planting across the Edmonton region" },
+const status = getVisitStatus(); // build-time; refreshed by visit-status.ts
+
+// Quick actions: each opens a dialog rendered once in Layout.astro.
+const actions = [
+  {
+    icon: "sprout",
+    title: "Find the right plant",
+    attrs: { "data-plant-finder-open": "", "aria-controls": "plant-finder-dialog" },
+  },
+  {
+    icon: "pin",
+    title: "Plan your visit",
+    attrs: { "data-visit-open": "", "aria-controls": "visit-dialog" },
+  },
 ] as const;
 ---
 
@@ -74,10 +86,34 @@ const features = [
     )}
   >
     {
-      features.map(({ icon, text }) => (
-        <li class="flex max-w-[15rem] items-center gap-3 text-[15px] leading-snug">
-          <HeroIcon name={icon} class={cn("size-9", dark ? "text-sherwood-lime-line" : "text-sherwood-leaf")} />
-          {text}
+      actions.map(({ icon, title, attrs }) => (
+        <li>
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            {...attrs}
+            class="group/action flex min-h-11 cursor-pointer items-center gap-3 text-left text-[15px] leading-snug"
+          >
+            <HeroIcon name={icon} class={cn("size-9", dark ? "text-sherwood-lime-line" : "text-sherwood-leaf")} />
+            <span class="flex flex-col">
+              <span class="font-bold underline decoration-1 underline-offset-[5px] group-hover/action:decoration-2">
+                {title}
+              </span>
+              {icon === "sprout" ? (
+                <span class={dark ? "text-sherwood-paper/80" : "text-sherwood-forest-soft"}>
+                  Trees, shrubs &amp; perennials
+                </span>
+              ) : (
+                <span
+                  data-visit-status
+                  data-open={String(status.open)}
+                  class={dark ? "text-sherwood-paper/80" : "text-sherwood-forest-soft"}
+                >
+                  <span data-visit-label>{status.label}</span>
+                </span>
+              )}
+            </span>
+          </button>
         </li>
       ))
     }
