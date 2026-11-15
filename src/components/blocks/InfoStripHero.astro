@@ -156,6 +156,9 @@ const textLink =
       <!-- 2. Book a consultation (whole card is the link) -->
       <a
         href={routes.consultation}
+        data-consultation-open
+        aria-haspopup="dialog"
+        aria-controls="consultation-dialog"
         class="group flex items-center gap-4 rounded-md border border-border bg-surface p-6 text-ink transition-colors hover:bg-app"
       >
         <span class="flex-1">

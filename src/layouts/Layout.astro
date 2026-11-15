@@ -6,6 +6,7 @@ import Hero from "@/components/blocks/hero/Hero.astro";
 import AppBar from "@/components/appbar/AppBar.astro";
 import PlantFinderDialog from "@/components/plant-finder/PlantFinderDialog.astro";
 import VisitDialog from "@/components/hours/VisitDialog.astro";
+import BookConsultationForm from "@/components/consultation/BookConsultationForm.astro";
 
 // hero={false} lets a page render its own hero (e.g. /hero-drafts).
 const { hero = true } = Astro.props;
@@ -33,6 +34,7 @@ const { hero = true } = Astro.props;
     <slot />
     <PlantFinderDialog />
     <VisitDialog />
+    <BookConsultationForm />
   </body>
 </html>
 

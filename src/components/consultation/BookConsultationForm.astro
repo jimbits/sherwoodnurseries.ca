@@ -1,0 +1,307 @@
+---
+/**
+ * BookConsultationForm.astro — "Book a consultation" request form in a modal.
+ *
+ * Rendered ONCE (in Layout.astro). Anything with `data-consultation-open`
+ * opens it. Links keep their href (/services/consultation) as a no-JS
+ * fallback; with JS the click opens the dialog instead.
+ *
+ * <a href="/services/consultation" data-consultation-open>Book a consultation</a>
+ *
+ * TODO: forms backend is still an open decision (see CLAUDE.md). Until it is
+ * wired up, submit only validates and shows the confirmation — NOTHING IS SENT.
+ * Do not ship to production in this state.
+ */
+import { business } from "@/data/business";
+import HeroIcon from "@/components/blocks/hero/HeroIcon.astro";
+
+const services = [
+  "Yard or garden design",
+  "Choosing trees & shrubs",
+  "Delivery & planting quote",
+  "Privacy screen or hedge",
+  "Something else",
+];
+
+const areas = ["Sherwood Park", "Strathcona County (rural)", "Fort Saskatchewan", "Edmonton", "Other"];
+
+const timing = [
+  "As soon as possible",
+  "This spring",
+  "This summer",
+  "This fall",
+  "Just planning ahead",
+];
+
+const field = "flex flex-col gap-1.5 text-[14px] font-semibold";
+const input =
+  "min-h-12 w-full rounded-sm border border-sherwood-forest/25 bg-sherwood-paper px-3 text-[16px] font-normal text-sherwood-forest placeholder:text-sherwood-forest-soft/70 focus:border-sherwood-forest focus:outline-2 focus:outline-offset-1 focus:outline-sherwood-leaf user-invalid:border-red-700";
+const optional = "font-normal text-sherwood-forest-soft";
+---
+
+<dialog
+  id="consultation-dialog"
+  aria-labelledby="consultation-title"
+  data-consultation-dialog
+  class="consultation-dialog m-auto w-[min(44rem,calc(100%-2rem))] max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-lg border border-sherwood-forest/10 bg-sherwood-paper p-0 text-sherwood-forest shadow-float"
+>
+  <div class="flex items-start justify-between gap-4 px-6 pt-6 sm:px-8 sm:pt-8">
+    <div>
+      <p class="flex items-center gap-2 text-[13px] font-semibold uppercase tracking-wider">
+        <HeroIcon name="leaf" class="size-4 text-sherwood-leaf" />
+        Free consultation
+      </p>
+      <h2 id="consultation-title" class="mt-2 text-[28px] font-bold leading-tight tracking-tight">
+        Book a consultation
+      </h2>
+      <p class="mt-2 text-[16px] leading-relaxed text-sherwood-forest-soft" data-consultation-intro>
+        Tell us a little about your yard and we'll get back to you within one business day
+        to set up a time.
+      </p>
+    </div>
+    <button
+      type="button"
+      data-consultation-close
+      aria-label="Close consultation form"
+      class="grid size-11 shrink-0 cursor-pointer place-items-center rounded-pill text-sherwood-forest-soft transition-colors hover:bg-sherwood-mint hover:text-sherwood-forest"
+    >
+      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Form -->
+  <form method="post" class="grid gap-5 px-6 pb-6 pt-6 sm:grid-cols-2 sm:px-8 sm:pb-8" data-consultation-form>
+    <label class={field}>
+      Full name
+      <input class={input} type="text" name="name" autocomplete="name" required />
+    </label>
+
+    <label class={field}>
+      Email
+      <input class={input} type="email" name="email" autocomplete="email" required />
+    </label>
+
+    <label class={field}>
+      <span>Phone <span class={optional}>(optional)</span></span>
+      <input class={input} type="tel" name="phone" autocomplete="tel" placeholder="587-555-0123" />
+    </label>
+
+    <label class={field}>
+      Where is the project?
+      <select class={input} name="area" required>
+        <option value="">Choose an area</option>
+        {areas.map((a) => <option>{a}</option>)}
+      </select>
+    </label>
+
+    <fieldset class="sm:col-span-2">
+      <legend class="text-[14px] font-semibold">What can we help with?</legend>
+      <div class="mt-2 flex flex-wrap gap-2">
+        {
+          services.map((s, i) => (
+            <label class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-pill border border-sherwood-forest/20 px-4 text-[15px] transition-colors hover:bg-sherwood-mint has-checked:border-sherwood-forest has-checked:bg-sherwood-lime-tint">
+              <input
+                type="checkbox"
+                name="services"
+                value={s}
+                class="size-4 accent-sherwood-forest"
+                checked={i === 0}
+              />
+              {s}
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend class="text-[14px] font-semibold">Property type</legend>
+      <div class="mt-2 flex gap-5">
+        <label class="inline-flex min-h-11 cursor-pointer items-center gap-2 text-[15px]">
+          <input type="radio" name="property" value="Residential" class="size-4 accent-sherwood-forest" checked />
+          Residential
+        </label>
+        <label class="inline-flex min-h-11 cursor-pointer items-center gap-2 text-[15px]">
+          <input type="radio" name="property" value="Commercial" class="size-4 accent-sherwood-forest" />
+          Commercial
+        </label>
+      </div>
+    </fieldset>
+
+    <label class={field}>
+      When are you hoping to plant?
+      <select class={input} name="timing">
+        {timing.map((t) => <option>{t}</option>)}
+      </select>
+    </label>
+
+    <label class={`${field} sm:col-span-2`}>
+      <span>Tell us about your space <span class={optional}>(optional)</span></span>
+      <textarea
+        class={`${input} min-h-28 py-2.5`}
+        name="message"
+        rows="4"
+        placeholder="Yard size, sun and shade, what you'd like to plant, anything you'd like to change…"
+      ></textarea>
+    </label>
+
+    <fieldset class="sm:col-span-2">
+      <legend class="text-[14px] font-semibold">Best way to reach you</legend>
+      <div class="mt-2 flex gap-5">
+        <label class="inline-flex min-h-11 cursor-pointer items-center gap-2 text-[15px]">
+          <input type="radio" name="contact" value="Email" class="size-4 accent-sherwood-forest" checked />
+          Email
+        </label>
+        <label class="inline-flex min-h-11 cursor-pointer items-center gap-2 text-[15px]">
+          <input type="radio" name="contact" value="Phone" class="size-4 accent-sherwood-forest" />
+          Phone
+        </label>
+      </div>
+    </fieldset>
+
+    <label class="flex items-start gap-3 text-[14px] leading-relaxed text-sherwood-forest-soft sm:col-span-2">
+      <input type="checkbox" name="consent" required class="mt-1 size-4 shrink-0 accent-sherwood-forest" />
+      <span>
+        I agree that {business.name} may use these details to contact me about my
+        consultation. See our <a href="/privacy" class="font-semibold text-sherwood-forest underline underline-offset-4">privacy policy</a>.
+      </span>
+    </label>
+
+    <div class="flex flex-col-reverse gap-3 border-t border-sherwood-forest/10 pt-5 sm:col-span-2 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-[14px] text-sherwood-forest-soft">
+        Rather talk? Call
+        <a href={business.phoneHref} class="font-semibold text-sherwood-forest underline underline-offset-4">{business.phone}</a>
+      </p>
+      <button
+        type="submit"
+        class="inline-flex min-h-12 cursor-pointer items-center justify-center gap-2 rounded-sm bg-sherwood-forest px-7 text-[16px] font-bold text-sherwood-paper transition-colors hover:bg-sherwood-forest-hover"
+      >
+        Request consultation
+        <HeroIcon name="arrow" class="size-5" />
+      </button>
+    </div>
+  </form>
+
+  <!-- Confirmation -->
+  <div class="px-6 pb-8 pt-6 sm:px-8" role="status" hidden data-consultation-done>
+    <div class="rounded-sm bg-sherwood-mint p-6">
+      <h3 class="text-[20px] font-bold">Thanks, we've got your request.</h3>
+      <p class="mt-2 text-[16px] leading-relaxed text-sherwood-forest-soft">
+        We'll be in touch within one business day to book a time. If it's urgent, call us at
+        <a href={business.phoneHref} class="font-semibold text-sherwood-forest underline underline-offset-4">{business.phone}</a>.
+      </p>
+    </div>
+    <button
+      type="button"
+      data-consultation-close
+      class="mt-5 inline-flex min-h-12 cursor-pointer items-center justify-center rounded-sm border-2 border-sherwood-forest px-6 text-[16px] font-bold transition-colors hover:bg-sherwood-forest/5"
+    >
+      Close
+    </button>
+  </div>
+</dialog>
+
+<style>
+  .consultation-dialog,
+  .consultation-dialog::backdrop {
+    opacity: 0;
+    transition:
+      opacity 180ms ease-out,
+      display 180ms allow-discrete,
+      overlay 180ms allow-discrete;
+  }
+
+  .consultation-dialog::backdrop {
+    background-color: rgb(20 28 20 / 0.45);
+  }
+
+  .consultation-dialog[open],
+  .consultation-dialog[open]::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    .consultation-dialog[open],
+    .consultation-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .consultation-dialog,
+    .consultation-dialog::backdrop {
+      transition: none;
+    }
+  }
+
+  :global(html:has(dialog[data-consultation-dialog][open])) {
+    overflow: hidden;
+  }
+</style>
+
+<script>
+  const getDialog = () =>
+    document.querySelector<HTMLDialogElement>("[data-consultation-dialog]");
+
+  const open = () => {
+    const dialog = getDialog();
+    if (dialog && !dialog.open) dialog.showModal();
+  };
+
+  // Delegated, bound once: any [data-consultation-open] opens the form.
+  document.addEventListener("click", (event) => {
+    const trigger = (event.target as Element | null)?.closest("[data-consultation-open]");
+    if (!trigger) return;
+    event.preventDefault();
+    const host = trigger.closest("dialog[open]");
+    if (host instanceof HTMLDialogElement && host !== getDialog()) {
+      host.addEventListener("close", open, { once: true });
+    } else {
+      open();
+    }
+  });
+
+  function initConsultation() {
+    const dialog = getDialog();
+    if (!dialog || dialog.dataset.bound) return;
+    dialog.dataset.bound = "true";
+
+    const form = dialog.querySelector<HTMLFormElement>("[data-consultation-form]");
+    const done = dialog.querySelector<HTMLElement>("[data-consultation-done]");
+    const intro = dialog.querySelector<HTMLElement>("[data-consultation-intro]");
+
+    dialog
+      .querySelectorAll("[data-consultation-close]")
+      .forEach((btn) => btn.addEventListener("click", () => dialog.close()));
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    // TODO: send to the forms backend once chosen. For now: validate, then
+    // show the confirmation. Nothing is submitted anywhere.
+    form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      form.hidden = true;
+      if (intro) intro.hidden = true;
+      if (done) {
+        done.hidden = false;
+        done.querySelector<HTMLButtonElement>("button")?.focus();
+      }
+    });
+
+    // Reset to a fresh form after a completed request is closed.
+    dialog.addEventListener("close", () => {
+      if (!form || !form.hidden) return;
+      form.reset();
+      form.hidden = false;
+      if (intro) intro.hidden = false;
+      if (done) done.hidden = true;
+    });
+  }
+
+  initConsultation();
+  document.addEventListener("astro:page-load", initConsultation);
+</script>
