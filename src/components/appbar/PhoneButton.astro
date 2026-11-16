@@ -14,12 +14,12 @@ interface Props extends Omit<HTMLAttributes<"a">, "href"> {
 }
 
 const {
-  phone = "(587)-545-6929",
+  phone = "(587) 545-6929",
   label = "Questions Call For Free?",
   class: className,
   ...rest
 } = Astro.props;
-const href = `tel:5875456929`;
+const href = `tel:${phone.replace(/\D/g, "")}`;
 ---
 
 <a

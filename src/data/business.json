@@ -1,0 +1,25 @@
+{
+  "name": "Sherwood Nurseries",
+  "address": {
+    "road": "22040 Township Rd 522",
+    "town": "Sherwood Park",
+    "province": "AB",
+    "country": "Canada",
+    "postalCode": "T8C 1G2"
+  },
+  "geoLocation": {
+    "latitude": 53.483603988397526,
+    "longitude": -113.11036053111896
+  },
+  "phone": "587-545-6929",
+  "email": "info@sherwoodnurseries.ca",
+  "hours": {
+    "regular": {
+      "mondayToSaturday": "9am–6pm",
+      "sunday": "10am–5pm"
+    },
+    "closedDate": "Monday, October 10th 2026",
+    "reopenDate": "Monday March 20th, 2027"
+  },
+  "domain": "https://sherwoodnurseries.ca"
+}

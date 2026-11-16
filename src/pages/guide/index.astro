@@ -1,6 +1,7 @@
 ---
 // src/pages/styleguide.astro
 import "@/css/global.css";
+import { Font } from "astro:assets";
 import PageMode from "@/components/page-mode/PageMode.astro";
 const plant = {
   name: "Pilea Plant",
@@ -14,6 +15,8 @@ const plant = {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <Font cssVariable="--font-nunito" />
     <title>Styleguide · Plant App</title>
   </head>
 

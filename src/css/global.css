@@ -1,5 +1,4 @@
 /* Plant App design tokens for Tailwind CSS v4 (generated from the Plant App design system) */
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 /* Dark mode: add data-theme="dark" to <html> */
@@ -52,7 +51,7 @@
   --color-sherwood-paper: oklch(100% 0 0);
 
   /* Typography */
-  --font-sans: "Nunito", ui-rounded, system-ui, sans-serif;
+  --font-sans: var(--font-nunito), ui-rounded, system-ui, sans-serif;
 
   --text-display: 32px;
   --text-display--line-height: 38px;

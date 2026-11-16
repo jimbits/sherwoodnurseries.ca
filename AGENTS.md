@@ -23,6 +23,6 @@ Consult these guides before working on related tasks:
 
 ## SEO / GEO / AEO
 
-Plan and checklist: [docs/plans/seo-geo-aeo.md](docs/plans/seo-geo-aeo.md).
+Plan and checklist: [docs/plans/seo.md](docs/plans/seo.md).
 Read it before adding pages, metadata, schema or content.
 Tick items off and add notes when work lands.

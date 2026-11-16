@@ -1,0 +1,5 @@
+# https://sherwoodnurseries.ca/robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://sherwoodnurseries.ca/sitemap-index.xml

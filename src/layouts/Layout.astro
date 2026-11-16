@@ -1,5 +1,6 @@
 ---
 import "@/css/global.css";
+import { Font } from "astro:assets";
 import AnnouncementBar from "@/components/announcement-bar/AnnouncementBar.astro";
 import PageModeScript from "@/components/page-mode/PageModeScript.astro";
 import Hero from "@/components/blocks/hero/Hero.astro";
@@ -7,20 +8,27 @@ import AppBar from "@/components/appbar/AppBar.astro";
 import PlantFinderDialog from "@/components/plant-finder/PlantFinderDialog.astro";
 import VisitDialog from "@/components/hours/VisitDialog.astro";
 import BookConsultationForm from "@/components/consultation/BookConsultationForm.astro";
+import SEO, { type Props as SEOProps } from "@/components/seo/SEO.astro";
 
-// hero={false} lets a page render its own hero (e.g. /hero-drafts).
-const { hero = true } = Astro.props;
+interface Props extends SEOProps {
+  /** false lets a page render its own hero (e.g. /hero-drafts). */
+  hero?: boolean;
+}
+
+// title, description, image, imageAlt and noindex go to <SEO> (see SEO.astro).
+const { hero = true, ...seo } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-CA">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- SVG Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Sherwood Nursery | Welcome</title>
+    <SEO {...seo} />
+    <Font cssVariable="--font-nunito" preload />
     <PageModeScript />
     <slot name="head" />
   </head>

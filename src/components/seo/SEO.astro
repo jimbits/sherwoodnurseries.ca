@@ -1,0 +1,75 @@
+---
+/**
+ * SEO — per-page <head> metadata: title, meta description, canonical URL,
+ * robots, Open Graph and Twitter card tags.
+ * Rendered once by Layout.astro, which passes through its own props; pages set
+ * them on <Layout title="…" description="…" />.
+ *
+ * - title: the page's primary keyword phrase. " – Sherwood Nurseries" is
+ *   appended unless the title already contains the business name.
+ * - description: aim for 150–160 characters (warns in dev if outside 120–160).
+ * - image: absolute URL or a path in public/; should be 1200×630.
+ * - noindex: adds `robots: noindex` and skips the canonical tag.
+ *
+ * The canonical URL is built from `site` in astro.config.mjs.
+ * Plan: docs/plans/seo.md (Phase 1).
+ */
+import { business } from "@/data/business";
+
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  imageAlt?: string;
+  noindex?: boolean;
+}
+
+const DEFAULT_TITLE = "Tree Nursery & Garden Centre in Sherwood Park, AB";
+const DEFAULT_DESCRIPTION =
+  "Sherwood Nurseries is an 8-acre tree nursery and garden centre near Sherwood Park, Alberta, growing hardy trees, shrubs and perennials for Edmonton-area yards.";
+const DEFAULT_IMAGE = "/og-image.jpg";
+const DEFAULT_IMAGE_ALT = "Rows of young flowering fruit trees growing at Sherwood Nurseries";
+
+const {
+  title = DEFAULT_TITLE,
+  description = DEFAULT_DESCRIPTION,
+  image = DEFAULT_IMAGE,
+  imageAlt = DEFAULT_IMAGE_ALT,
+  noindex = false,
+} = Astro.props;
+
+const fullTitle = title.includes(business.name) ? title : `${title} – ${business.name}`;
+
+const site = Astro.site ?? Astro.url;
+const canonical = new URL(Astro.url.pathname, site).href;
+const imageUrl = new URL(image, site).href;
+
+if (import.meta.env.DEV && (description.length < 120 || description.length > 160)) {
+  console.warn(
+    `[SEO] ${Astro.url.pathname}: meta description is ${description.length} characters (aim for 150–160).`,
+  );
+}
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+{noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={business.name} />
+<meta property="og:locale" content="en_CA" />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:image:alt" content={imageAlt} />
